@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Marp Vertical - 세로 스크롤 프레젠테이션</title>
+    
+    <!-- KaTeX for Math Rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    
+    <!-- Highlight.js for Code Syntax Highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -346,6 +355,39 @@
             overflow-x: auto;
             margin: 1rem 0;
             border-left: 4px solid #007bff;
+            position: relative;
+        }
+
+        .slide-content pre code {
+            background: transparent;
+            padding: 0;
+            border-radius: 0;
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        /* Math equations styling */
+        .katex {
+            font-size: 1.1em;
+        }
+
+        .katex-display {
+            margin: 1rem 0;
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+
+        /* Code block language label */
+        .code-language {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: rgba(0, 0, 0, 0.1);
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.7rem;
+            color: #666;
+            text-transform: uppercase;
         }
 
         .slide-content blockquote {
@@ -458,14 +500,26 @@
 ## 소제목
 내용을 여기에 작성하세요...
 
+수학 수식: $E = mc^2$
+
+```javascript
+function hello() {
+    console.log('Hello, World!');
+}
+```
+
 ---
 
 # 두 번째 슬라이드
-## 또 다른 소제목
-- 리스트 아이템 1
-- 리스트 아이템 2
+## 수학과 코드가 지원됩니다!
 
-더 많은 내용을 추가할 수 있습니다.
+블록 수식:
+$$\int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}$$
+
+```python
+def factorial(n):
+    return 1 if n <= 1 else n * factorial(n-1)
+```
 
 ---
 
@@ -489,6 +543,14 @@
             <div class="editor-content">
                 <textarea class="editor-textarea" id="editor-textarea" placeholder="# 첫 번째 슬라이드
 마크다운 내용을 여기에 입력하세요...
+
+수학 수식: $E = mc^2$
+
+```javascript
+function hello() {
+    console.log('Hello, World!');
+}
+```
 
 ---
 
@@ -514,7 +576,9 @@
                         <p style="margin-top: 1rem; font-size: 0.9rem; color: #999;">
                             • --- 으로 슬라이드를 구분합니다<br>
                             • 긴 내용은 자동으로 스크롤됩니다<br>
-                            • 제목은 항상 상단에 고정됩니다
+                            • 제목은 항상 상단에 고정됩니다<br>
+                            • 수학 수식 지원: $...$, $$...$$<br>
+                            • 코드 문법 강조: \`\`\`언어명
                         </p>
                     </div>
                 </div>
@@ -715,11 +779,53 @@
             const slideContent = viewer.querySelector('.slide-content');
             if (slideContent) {
                 slideContent.scrollTop = 0;
+                
+                // 수학 수식 렌더링
+                if (window.renderMathInElement) {
+                    renderMathInElement(slideContent, {
+                        delimiters: [
+                            {left: '$$', right: '$$', display: true},
+                            {left: '$', right: '$', display: false}
+                        ],
+                        throwOnError: false
+                    });
+                }
+                
+                // 코드 하이라이팅
+                if (window.hljs) {
+                    slideContent.querySelectorAll('pre code').forEach((block) => {
+                        hljs.highlightElement(block);
+                    });
+                }
             }
         }
 
         function markdownToHtml(markdown) {
-            return markdown
+            // 수학 수식 임시 플레이스홀더로 교체 (처리 순서 중요)
+            const mathExpressions = [];
+            let mathIndex = 0;
+            
+            // Display math ($$...$$)
+            markdown = markdown.replace(/\$\$([\s\S]*?)\$\$/g, (match, expr) => {
+                mathExpressions[mathIndex] = { type: 'display', expr: expr.trim() };
+                return `__MATH_${mathIndex++}__`;
+            });
+            
+            // Inline math ($...$)
+            markdown = markdown.replace(/\$([^$\n]+?)\$/g, (match, expr) => {
+                mathExpressions[mathIndex] = { type: 'inline', expr: expr.trim() };
+                return `__MATH_${mathIndex++}__`;
+            });
+            
+            // 코드 블록 처리 (언어 지정 가능)
+            markdown = markdown.replace(/```(\w+)?\n?([\s\S]*?)```/g, (match, lang, code) => {
+                const language = lang || '';
+                const languageLabel = language ? `<span class="code-language">${language}</span>` : '';
+                return `<pre>${languageLabel}<code class="language-${language}">${code.trim()}</code></pre>`;
+            });
+            
+            // 나머지 마크다운 처리
+            let html = markdown
                 .replace(/### (.*)/g, '<h3>$1</h3>')
                 .replace(/## (.*)/g, '<h2>$1</h2>')
                 .replace(/`([^`]+)`/g, '<code>$1</code>')
@@ -728,11 +834,24 @@
                 .replace(/^- (.*)$/gm, '<li>$1</li>')
                 .replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>')
                 .replace(/^> (.*)$/gm, '<blockquote>$1</blockquote>')
-                .replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
                 .replace(/\n\n/g, '</p><p>')
                 .replace(/^(?!<[hlu]|<p|<blockquote|<pre)(.+)$/gm, '<p>$1</p>')
                 .replace(/<\/ul>\s*<ul>/g, '')
                 .replace(/^<p><\/p>$/gm, '');
+            
+            // 수학 수식 복원
+            html = html.replace(/__MATH_(\d+)__/g, (match, index) => {
+                const math = mathExpressions[index];
+                if (!math) return match;
+                
+                if (math.type === 'display') {
+                    return `<div class="math-display">$$${math.expr}$$</div>`;
+                } else {
+                    return `<span class="math-inline">$${math.expr}$</span>`;
+                }
+            });
+            
+            return html;
         }
 
         function previousSlide() {
@@ -757,51 +876,136 @@
 - H1 제목 상단 고정
 - 페이지 번호 항상 표시
 - 마크다운 문법 지원
+- **수학 수식 지원** 🧮
+- **코드 문법 강조** 💻
 
-긴 내용이 있어도 스크롤로 모든 내용을 볼 수 있습니다. 더 많은 내용을 추가해보세요.
+긴 내용이 있어도 스크롤로 모든 내용을 볼 수 있습니다.
+
+### 수학 수식 예제
+인라인 수학: $E = mc^2$ 
+
+블록 수학:
+$$\\int_{-\\infty}^{\\infty} e^{-x^2} dx = \\sqrt{\\pi}$$
 
 \`\`\`javascript
-// 코드 블록도 지원합니다
-function hello() {
-    console.log("Hello, World!");
+// JavaScript 코드 블록
+function factorial(n) {
+    if (n <= 1) return 1;
+    return n * factorial(n - 1);
 }
+
+console.log(factorial(5)); // 120
 \`\`\`
 
 > 인용문도 이렇게 표시됩니다.
 
 ---
 
-# 기능 소개
-## 마크다운 지원
-- **굵은 글씨**
-- *기울임체*
-- \`인라인 코드\`
-- 링크와 이미지도 지원
+# 수학과 과학
+## 물리학 공식들
 
-## 스크롤링 기능
-이 슬라이드는 긴 내용을 담고 있습니다.
+### 운동 방정식
+뉴턴의 제2법칙: $F = ma$
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+자유낙하 공식:
+$$h = v_0 t + \\frac{1}{2}gt^2$$
 
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+### 에너지 보존
+운동에너지: $KE = \\frac{1}{2}mv^2$
 
-### 더 많은 내용
-Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
+위치에너지: $PE = mgh$
 
-Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
+\`\`\`python
+# Python으로 물리 계산
+import math
+
+def kinetic_energy(mass, velocity):
+    """운동에너지 계산"""
+    return 0.5 * mass * velocity**2
+
+def potential_energy(mass, height, g=9.81):
+    """위치에너지 계산"""
+    return mass * g * height
+
+# 예제
+mass = 10  # kg
+velocity = 5  # m/s
+height = 20  # m
+
+ke = kinetic_energy(mass, velocity)
+pe = potential_energy(mass, height)
+
+print(f"운동에너지: {ke} J")
+print(f"위치에너지: {pe} J")
+\`\`\`
+
+---
+
+# 코딩 예제
+## 다양한 언어 지원
+
+### JavaScript
+\`\`\`javascript
+// 비동기 함수 예제
+async function fetchData(url) {
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+\`\`\`
+
+### Python
+\`\`\`python
+# 클래스와 상속 예제
+class Animal:
+    def __init__(self, name):
+        self.name = name
+    
+    def speak(self):
+        pass
+
+class Dog(Animal):
+    def speak(self):
+        return f"{self.name}가 멍멍!"
+
+dog = Dog("바둑이")
+print(dog.speak())
+\`\`\`
+
+### 수학적 증명
+피타고라스 정리: $a^2 + b^2 = c^2$
+
+이항정리:
+$$(x + y)^n = \\sum_{k=0}^{n} \\binom{n}{k} x^{n-k} y^k$$
 
 ---
 
 # 마무리
 ## 감사합니다!
-이 도구를 사용해보세요:
 
+### 새로운 기능들
+✅ **수학 수식**: $\\LaTeX$ 문법으로 아름다운 수식  
+✅ **코드 강조**: 다양한 프로그래밍 언어 지원  
+✅ **세로 스크롤**: 긴 내용도 문제없이  
+
+### 사용법
 1. 마크다운을 입력하세요
-2. "프레젠테이션 생성" 버튼을 클릭하세요
-3. 좌측 네비게이션으로 슬라이드를 이동하세요
-4. 긴 내용은 스크롤해서 확인하세요
+2. 수학 수식은 \$...\$ (인라인) 또는 \$\$...\$\$ (블록)
+3. 코드는 \\\`\\\`\\\`언어이름 으로 시작
+4. "프레젠테이션 생성" 버튼을 클릭하세요
 
-**즐거운 프레젠테이션 되세요!** 🎉`;
+**즐거운 프레젠테이션 되세요!** 🎉
+
+### 복잡한 수식 예제
+맥스웰 방정식:
+$$\\nabla \\cdot \\vec{E} = \\frac{\\rho}{\\epsilon_0}$$
+$$\\nabla \\cdot \\vec{B} = 0$$
+$$\\nabla \\times \\vec{E} = -\\frac{\\partial \\vec{B}}{\\partial t}$$
+$$\\nabla \\times \\vec{B} = \\mu_0\\vec{J} + \\mu_0\\epsilon_0\\frac{\\partial \\vec{E}}{\\partial t}$$`;
 
             document.getElementById('markdown-input').value = sampleMarkdown;
             document.getElementById('editor-textarea').value = sampleMarkdown;
@@ -830,7 +1034,9 @@ Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed 
                         <p style="margin-top: 1rem; font-size: 0.9rem; color: #999;">
                             • --- 으로 슬라이드를 구분합니다<br>
                             • 긴 내용은 자동으로 스크롤됩니다<br>
-                            • 제목은 항상 상단에 고정됩니다
+                            • 제목은 항상 상단에 고정됩니다<br>
+                            • 수학 수식 지원: $...$, $$...$$<br>
+                            • 코드 문법 강조: \`\`\`언어명
                         </p>
                     </div>
                 </div>
