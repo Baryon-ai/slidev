@@ -1,0 +1,938 @@
+        function clearAll() {
+            document.getElementById('markdown-input').value = '';
+            document.getElementById('editor-textarea').value = '';
+            slides = [];
+            currentSlide = 0;
+            
+            document.getElementById('slide-navigation').innerHTML = `
+                <div class="empty-state">
+                    <div style="font-size: 2rem;">📋</div>
+                    <div>마크다운을 입력하고<br>프레젠테이션을 생성하세요</div>
+                </div>
+            `;
+            
+            document.getElementById('slide-viewer').innerHTML = `
+                <div class="empty-state">
+                    <div style="font-size: 3rem;">🎭</div>
+                    <div>
+                        <h3>환영합니다!</h3>
+                        <p>위의 텍스트 영역에 마크다운을 입력하고<br>"프레젠테이션 생성" 버튼을 클릭하세요.</p>
+                        <p style="margin-top: 1rem; font-size: 0.9rem; color: #999;">
+                            • --- 으로 슬라이드를 구분합니다<br>
+                            • 긴 내용은 자동으로 스크롤됩니다<br>
+                            • 제목은 항상 상단에 고정됩니다
+                        </p>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('page-indicator').style.display = 'none';
+            document.getElementById('slide-controls').style.display = 'none';
+        }
+
+        // 에디터 텍스트에어리어 실시간 동기화
+        document.addEventListener('DOMContentLoaded', function() {
+            const editorTextarea = document.getElementById('editor-textarea');
+            const mainTextarea = document.getElementById('markdown-input');
+            
+            editorTextarea.addEventListener('input', function() {
+                mainTextarea.value = editorTextarea.value;
+            });
+            
+            mainTextarea.addEventListener('input', function() {
+                editorTextarea.value = mainTextarea.value;
+            });
+        });
+
+        // 키보드 단축키 지원
+        document.addEventListener('keydown', function(e) {
+            if (slides.length === 0) return;
+            
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                e.preventDefault();
+                previousSlide();
+            } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                e.preventDefault();
+                nextSlide();
+            }
+        });
+
+        // <!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marp Vertical - 세로 스크롤 프레젠테이션</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .header.collapsed {
+            padding: 0.5rem 1rem;
+        }
+
+        .header h1 {
+            color: white;
+            text-align: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .header.collapsed h1 {
+            margin-bottom: 0;
+            font-size: 1.2rem;
+        }
+
+        .input-area {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .input-area.hidden {
+            max-height: 0;
+            opacity: 0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .layout-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .layout-btn {
+            padding: 0.5rem 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .layout-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .layout-btn.active {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.6);
+        }
+
+        .toggle-btn {
+            background: linear-gradient(45deg, #4ecdc4, #3db8b0);
+            margin-bottom: 1rem;
+        }
+
+        .input-group {
+            flex: 1;
+        }
+
+        .input-group label {
+            color: white;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 1rem;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            resize: vertical;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            flex-direction: column;
+            min-width: 200px;
+        }
+
+        button {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .viewer-container {
+            flex: 1;
+            display: flex;
+            background: white;
+            margin: 1rem;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .viewer-container.editor-only {
+            background: #f8f9fa;
+            flex-direction: column;
+        }
+
+        .viewer-container.split-view {
+            flex-direction: column;
+        }
+
+        .split-container {
+            display: flex;
+            flex: 1;
+        }
+
+        .editor-section {
+            display: none;
+            flex-direction: column;
+            background: #f8f9fa;
+            border-right: 1px solid #e9ecef;
+        }
+
+        .editor-section.visible {
+            display: flex;
+        }
+
+        .editor-section.full-width {
+            flex: 1;
+        }
+
+        .editor-section.half-width {
+            flex: 1;
+            max-width: 50%;
+        }
+
+        .editor-header {
+            background: #e9ecef;
+            padding: 1rem;
+            border-bottom: 1px solid #ddd;
+            font-weight: bold;
+            color: #495057;
+        }
+
+        .editor-content {
+            flex: 1;
+            padding: 1rem;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .editor-textarea {
+            flex: 1;
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            resize: none;
+            outline: none;
+        }
+
+        .editor-textarea:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+        }
+
+        .slide-navigation {
+            width: 200px;
+            background: #f8f9fa;
+            border-right: 1px solid #e9ecef;
+            overflow-y: auto;
+            transition: all 0.3s ease;
+        }
+
+        .slide-navigation.hidden {
+            display: none;
+        }
+
+        .presentation-section {
+            flex: 1;
+            display: flex;
+            transition: all 0.3s ease;
+        }
+
+        .presentation-section.hidden {
+            display: none;
+        }
+
+        .slide-nav-item {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .slide-nav-item:hover {
+            background: #e9ecef;
+        }
+
+        .slide-nav-item.active {
+            background: #007bff;
+            color: white;
+        }
+
+        .slide-nav-title {
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .slide-nav-preview {
+            font-size: 0.8rem;
+            color: #666;
+            line-height: 1.3;
+        }
+
+        .slide-nav-item.active .slide-nav-preview {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .slide-viewer {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slide-header {
+            background: #f8f9fa;
+            padding: 1rem 2rem;
+            border-bottom: 2px solid #007bff;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .slide-header h1 {
+            color: #2c3e50;
+            font-size: 1.8rem;
+            margin: 0;
+        }
+
+        .slide-content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+            line-height: 1.6;
+        }
+
+        .slide-content h2 {
+            color: #2c3e50;
+            margin: 1.5rem 0 1rem 0;
+            font-size: 1.4rem;
+        }
+
+        .slide-content h3 {
+            color: #34495e;
+            margin: 1rem 0 0.5rem 0;
+            font-size: 1.2rem;
+        }
+
+        .slide-content p {
+            margin-bottom: 1rem;
+            color: #5a6c7d;
+        }
+
+        .slide-content ul, .slide-content ol {
+            margin: 1rem 0;
+            padding-left: 2rem;
+        }
+
+        .slide-content li {
+            margin-bottom: 0.5rem;
+            color: #5a6c7d;
+        }
+
+        .slide-content code {
+            background: #f1f3f4;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .slide-content pre {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            border-left: 4px solid #007bff;
+        }
+
+        .slide-content blockquote {
+            border-left: 4px solid #007bff;
+            padding-left: 1rem;
+            margin: 1rem 0;
+            font-style: italic;
+            color: #666;
+        }
+
+        .page-indicator {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: rgba(0, 123, 255, 0.9);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        .slide-controls {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 0.5rem;
+            z-index: 1000;
+        }
+
+        .slide-controls button {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            background: rgba(0, 123, 255, 0.9);
+        }
+
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #666;
+            text-align: center;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #ccc;
+        }
+
+        @media (max-width: 768px) {
+            .viewer-container {
+                flex-direction: column;
+                margin: 0.5rem;
+            }
+
+            .slide-navigation {
+                width: 100%;
+                max-height: 150px;
+            }
+
+            .slide-nav-item {
+                padding: 0.5rem;
+            }
+
+            .slide-content {
+                padding: 1rem;
+            }
+
+            .input-area {
+                flex-direction: column;
+            }
+
+            .controls {
+                flex-direction: row;
+                min-width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header" id="header">
+        <h1>🎯 Marp Vertical - 세로 스크롤 프레젠테이션 뷰어</h1>
+        
+        <div class="layout-controls">
+            <button class="layout-btn active" id="layout-presentation" onclick="setLayout('presentation')">
+                🎭 프레젠테이션만
+            </button>
+            <button class="layout-btn" id="layout-split" onclick="setLayout('split')">
+                📊 분할 보기
+            </button>
+            <button class="layout-btn" id="layout-editor" onclick="setLayout('editor')">
+                📝 에디터만
+            </button>
+            <button class="layout-btn toggle-btn" onclick="toggleInput()">
+                ⚙️ 입력창 토글
+            </button>
+        </div>
+
+        <div class="input-area" id="input-area">
+            <div class="input-group">
+                <label for="markdown-input">마크다운 입력 (--- 으로 슬라이드 구분)</label>
+                <textarea id="markdown-input" placeholder="# 첫 번째 슬라이드
+## 소제목
+내용을 여기에 작성하세요...
+
+---
+
+# 두 번째 슬라이드
+## 또 다른 소제목
+- 리스트 아이템 1
+- 리스트 아이템 2
+
+더 많은 내용을 추가할 수 있습니다.
+
+---
+
+# 세 번째 슬라이드
+더 많은 내용..."></textarea>
+            </div>
+            <div class="controls">
+                <button onclick="parseMarkdown()">🚀 프레젠테이션 생성</button>
+                <button onclick="loadSample()">📝 샘플 로드</button>
+                <button onclick="clearAll()">🗑️ 초기화</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="viewer-container" id="viewer-container">
+        <!-- 에디터 섹션 -->
+        <div class="editor-section" id="editor-section">
+            <div class="editor-header">
+                📝 마크다운 에디터
+            </div>
+            <div class="editor-content">
+                <textarea class="editor-textarea" id="editor-textarea" placeholder="# 첫 번째 슬라이드
+마크다운 내용을 여기에 입력하세요...
+
+---
+
+# 두 번째 슬라이드
+더 많은 내용..."></textarea>
+            </div>
+        </div>
+
+        <!-- 프레젠테이션 섹션 -->
+        <div class="presentation-section" id="presentation-section">
+            <div class="slide-navigation" id="slide-navigation">
+                <div class="empty-state">
+                    <div style="font-size: 2rem;">📋</div>
+                    <div>마크다운을 입력하고<br>프레젠테이션을 생성하세요</div>
+                </div>
+            </div>
+            <div class="slide-viewer" id="slide-viewer">
+                <div class="empty-state">
+                    <div style="font-size: 3rem;">🎭</div>
+                    <div>
+                        <h3>환영합니다!</h3>
+                        <p>위의 텍스트 영역에 마크다운을 입력하고<br>"프레젠테이션 생성" 버튼을 클릭하세요.</p>
+                        <p style="margin-top: 1rem; font-size: 0.9rem; color: #999;">
+                            • --- 으로 슬라이드를 구분합니다<br>
+                            • 긴 내용은 자동으로 스크롤됩니다<br>
+                            • 제목은 항상 상단에 고정됩니다
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-indicator" id="page-indicator" style="display: none;">
+        1 / 1
+    </div>
+
+    <div class="slide-controls" id="slide-controls" style="display: none;">
+        <button onclick="previousSlide()">← 이전</button>
+        <button onclick="nextSlide()">다음 →</button>
+    </div>
+
+    <script>
+        let slides = [];
+        let currentSlide = 0;
+        let currentLayout = 'presentation';
+        let inputVisible = true;
+
+        function setLayout(layout) {
+            currentLayout = layout;
+            const container = document.getElementById('viewer-container');
+            const editorSection = document.getElementById('editor-section');
+            const presentationSection = document.getElementById('presentation-section');
+            const header = document.getElementById('header');
+            
+            // 모든 레이아웃 버튼 비활성화
+            document.querySelectorAll('.layout-btn:not(.toggle-btn)').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // 현재 레이아웃 버튼 활성화
+            document.getElementById(`layout-${layout}`).classList.add('active');
+            
+            // 레이아웃에 따른 클래스 제거
+            container.classList.remove('editor-only', 'split-view');
+            editorSection.classList.remove('visible', 'full-width', 'half-width');
+            presentationSection.classList.remove('hidden');
+            
+            switch(layout) {
+                case 'presentation':
+                    // 프레젠테이션만 보기
+                    editorSection.classList.remove('visible');
+                    break;
+                    
+                case 'split':
+                    // 분할 보기
+                    container.classList.add('split-view');
+                    editorSection.classList.add('visible', 'half-width');
+                    break;
+                    
+                case 'editor':
+                    // 에디터만 보기
+                    container.classList.add('editor-only');
+                    editorSection.classList.add('visible', 'full-width');
+                    presentationSection.classList.add('hidden');
+                    break;
+            }
+            
+            // 에디터 내용 동기화
+            syncEditorContent();
+        }
+
+        function toggleInput() {
+            inputVisible = !inputVisible;
+            const inputArea = document.getElementById('input-area');
+            const header = document.getElementById('header');
+            
+            if (inputVisible) {
+                inputArea.classList.remove('hidden');
+                header.classList.remove('collapsed');
+            } else {
+                inputArea.classList.add('hidden');
+                header.classList.add('collapsed');
+            }
+        }
+
+        function syncEditorContent() {
+            const mainTextarea = document.getElementById('markdown-input');
+            const editorTextarea = document.getElementById('editor-textarea');
+            
+            // 메인 텍스트에서 에디터로 동기화
+            if (mainTextarea.value !== editorTextarea.value) {
+                editorTextarea.value = mainTextarea.value;
+            }
+        }
+
+        function parseMarkdown() {
+            // 에디터에서 메인 텍스트로 동기화
+            const mainTextarea = document.getElementById('markdown-input');
+            const editorTextarea = document.getElementById('editor-textarea');
+            
+            if (currentLayout === 'editor' || currentLayout === 'split') {
+                mainTextarea.value = editorTextarea.value;
+            }
+            
+            const input = mainTextarea.value.trim();
+            if (!input) {
+                alert('마크다운 내용을 입력해주세요.');
+                return;
+            }
+
+            slides = [];
+            // --- 으로 슬라이드 분할
+            const slideTexts = input.split(/\n---\n|\n---$|^---\n/);
+            
+            slideTexts.forEach((slideText, index) => {
+                slideText = slideText.trim();
+                if (!slideText) return;
+                
+                const lines = slideText.split('\n');
+                let title = `슬라이드 ${index + 1}`;
+                let content = slideText;
+                
+                // 첫 번째 # 제목을 찾아서 타이틀로 사용
+                for (let i = 0; i < lines.length; i++) {
+                    if (lines[i].startsWith('# ')) {
+                        title = lines[i].substring(2).trim();
+                        // 제목 라인을 제거한 나머지 내용
+                        const remainingLines = [...lines];
+                        remainingLines.splice(i, 1);
+                        content = remainingLines.join('\n').trim();
+                        break;
+                    }
+                }
+                
+                slides.push({
+                    title: title,
+                    content: content
+                });
+            });
+
+            if (slides.length === 0) {
+                alert('슬라이드 내용이 없습니다. --- 으로 슬라이드를 구분하세요.');
+                return;
+            }
+
+            renderSlides();
+            showSlide(0);
+        }
+
+        function renderSlides() {
+            const navigation = document.getElementById('slide-navigation');
+            const viewer = document.getElementById('slide-viewer');
+            
+            // 네비게이션 렌더링
+            navigation.innerHTML = '';
+            slides.forEach((slide, index) => {
+                const navItem = document.createElement('div');
+                navItem.className = 'slide-nav-item';
+                navItem.onclick = () => showSlide(index);
+                
+                const preview = slide.content.length > 100 
+                    ? slide.content.substring(0, 100) + '...' 
+                    : slide.content;
+                
+                navItem.innerHTML = `
+                    <div class="slide-nav-title">${index + 1}. ${slide.title}</div>
+                    <div class="slide-nav-preview">${preview}</div>
+                `;
+                navigation.appendChild(navItem);
+            });
+
+            // 컨트롤 표시
+            document.getElementById('page-indicator').style.display = 'block';
+            document.getElementById('slide-controls').style.display = 'flex';
+        }
+
+        function showSlide(index) {
+            if (index < 0 || index >= slides.length) return;
+            
+            currentSlide = index;
+            const slide = slides[index];
+            const viewer = document.getElementById('slide-viewer');
+            
+            // 슬라이드 내용 렌더링
+            viewer.innerHTML = `
+                <div class="slide-header">
+                    <h1>${slide.title}</h1>
+                </div>
+                <div class="slide-content">
+                    ${markdownToHtml(slide.content)}
+                </div>
+            `;
+
+            // 네비게이션 활성화 상태 업데이트
+            document.querySelectorAll('.slide-nav-item').forEach((item, i) => {
+                item.classList.toggle('active', i === index);
+            });
+
+            // 페이지 표시 업데이트
+            document.getElementById('page-indicator').textContent = `${index + 1} / ${slides.length}`;
+
+            // 슬라이드 내용 맨 위로 스크롤
+            const slideContent = viewer.querySelector('.slide-content');
+            if (slideContent) {
+                slideContent.scrollTop = 0;
+            }
+        }
+
+        function markdownToHtml(markdown) {
+            return markdown
+                .replace(/### (.*)/g, '<h3>$1</h3>')
+                .replace(/## (.*)/g, '<h2>$1</h2>')
+                .replace(/`([^`]+)`/g, '<code>$1</code>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/^- (.*)$/gm, '<li>$1</li>')
+                .replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>')
+                .replace(/^> (.*)$/gm, '<blockquote>$1</blockquote>')
+                .replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
+                .replace(/\n\n/g, '</p><p>')
+                .replace(/^(?!<[hlu]|<p|<blockquote|<pre)(.+)$/gm, '<p>$1</p>')
+                .replace(/<\/ul>\s*<ul>/g, '')
+                .replace(/^<p><\/p>$/gm, '');
+        }
+
+        function previousSlide() {
+            if (currentSlide > 0) {
+                showSlide(currentSlide - 1);
+            }
+        }
+
+        function nextSlide() {
+            if (currentSlide < slides.length - 1) {
+                showSlide(currentSlide + 1);
+            }
+        }
+
+        function loadSample() {
+            const sampleMarkdown = `# 소개
+## 안녕하세요!
+이것은 **Marp Vertical** 프레젠테이션 뷰어입니다.
+
+### 주요 특징
+- 세로 스크롤링 지원
+- H1 제목 상단 고정
+- 페이지 번호 항상 표시
+- 마크다운 문법 지원
+
+긴 내용이 있어도 스크롤로 모든 내용을 볼 수 있습니다. 더 많은 내용을 추가해보세요.
+
+\`\`\`javascript
+// 코드 블록도 지원합니다
+function hello() {
+    console.log("Hello, World!");
+}
+\`\`\`
+
+> 인용문도 이렇게 표시됩니다.
+
+---
+
+# 기능 소개
+## 마크다운 지원
+- **굵은 글씨**
+- *기울임체*
+- \`인라인 코드\`
+- 링크와 이미지도 지원
+
+## 스크롤링 기능
+이 슬라이드는 긴 내용을 담고 있습니다.
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+### 더 많은 내용
+Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
+
+Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
+
+---
+
+# 마무리
+## 감사합니다!
+이 도구를 사용해보세요:
+
+1. 마크다운을 입력하세요
+2. "프레젠테이션 생성" 버튼을 클릭하세요
+3. 좌측 네비게이션으로 슬라이드를 이동하세요
+4. 긴 내용은 스크롤해서 확인하세요
+
+**즐거운 프레젠테이션 되세요!** 🎉`;
+
+            document.getElementById('markdown-input').value = sampleMarkdown;
+            document.getElementById('editor-textarea').value = sampleMarkdown;
+            parseMarkdown();
+        }
+
+        function clearAll() {
+            document.getElementById('markdown-input').value = '';
+            document.getElementById('editor-textarea').value = '';
+            slides = [];
+            currentSlide = 0;
+            
+            document.getElementById('slide-navigation').innerHTML = `
+                <div class="empty-state">
+                    <div style="font-size: 2rem;">📋</div>
+                    <div>마크다운을 입력하고<br>프레젠테이션을 생성하세요</div>
+                </div>
+            `;
+            
+            document.getElementById('slide-viewer').innerHTML = `
+                <div class="empty-state">
+                    <div style="font-size: 3rem;">🎭</div>
+                    <div>
+                        <h3>환영합니다!</h3>
+                        <p>위의 텍스트 영역에 마크다운을 입력하고<br>"프레젠테이션 생성" 버튼을 클릭하세요.</p>
+                        <p style="margin-top: 1rem; font-size: 0.9rem; color: #999;">
+                            • --- 으로 슬라이드를 구분합니다<br>
+                            • 긴 내용은 자동으로 스크롤됩니다<br>
+                            • 제목은 항상 상단에 고정됩니다
+                        </p>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('page-indicator').style.display = 'none';
+            document.getElementById('slide-controls').style.display = 'none';
+        }
+
+        // 에디터 텍스트에어리어 실시간 동기화
+        document.addEventListener('DOMContentLoaded', function() {
+            const editorTextarea = document.getElementById('editor-textarea');
+            const mainTextarea = document.getElementById('markdown-input');
+            
+            editorTextarea.addEventListener('input', function() {
+                mainTextarea.value = editorTextarea.value;
+            });
+            
+            mainTextarea.addEventListener('input', function() {
+                editorTextarea.value = mainTextarea.value;
+            });
+        });
+
+        // 키보드 단축키 지원
+        document.addEventListener('keydown', function(e) {
+            if (slides.length === 0) return;
+            
+            // 텍스트 입력 중이 아닐 때만 단축키 동작
+            if (e.target.tagName === 'TEXTAREA') return;
+            
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                e.preventDefault();
+                previousSlide();
+            } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                e.preventDefault();
+                nextSlide();
+            }
+        });
+
+        // 초기 로드 시 샘플 표시
+        window.addEventListener('load', function() {
+            loadSample();
+        });
+    </script>
+</body>
+</html>
