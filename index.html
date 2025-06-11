@@ -398,6 +398,34 @@
             color: #666;
         }
 
+        .slide-content table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+
+        .slide-content th,
+        .slide-content td {
+            border: 1px solid #ddd;
+            padding: 0.75rem;
+            text-align: left;
+        }
+
+        .slide-content th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .slide-content tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .slide-content tr:hover {
+            background-color: #f5f5f5;
+        }
+
         .page-indicator {
             position: fixed;
             bottom: 2rem;
@@ -495,7 +523,7 @@
 
         <div class="input-area" id="input-area">
             <div class="input-group">
-                <label for="markdown-input">마크다운 입력 (--- 으로 슬라이드 구분)</label>
+                <label for="markdown-input">마크다운 입력 (--- 으로 슬라이드 구분, 수식/코드/테이블 지원)</label>
                 <textarea id="markdown-input" placeholder="# 첫 번째 슬라이드
 ## 소제목
 내용을 여기에 작성하세요...
@@ -524,6 +552,13 @@ def factorial(n):
 ---
 
 # 세 번째 슬라이드
+## 테이블 예제
+
+| 항목 | 값 | 설명 |
+|------|----|----- |
+| 항목1 | 123 | 설명1 |
+| 항목2 | 456 | 설명2 |
+
 더 많은 내용..."></textarea>
             </div>
             <div class="controls">
@@ -552,6 +587,12 @@ function hello() {
 }
 ```
 
+| 기능 | 지원 | 비고 |
+|------|------|------|
+| 수식 | ✅ | LaTeX |
+| 코드 | ✅ | 문법강조 |
+| 테이블 | ✅ | 새기능! |
+
 ---
 
 # 두 번째 슬라이드
@@ -578,7 +619,8 @@ function hello() {
                             • 긴 내용은 자동으로 스크롤됩니다<br>
                             • 제목은 항상 상단에 고정됩니다<br>
                             • 수학 수식 지원: $...$, $$...$$<br>
-                            • 코드 문법 강조: \`\`\`언어명
+                            • 코드 문법 강조: \`\`\`언어명<br>
+                            • 테이블 지원: | 헤더 | 형식 |
                         </p>
                     </div>
                 </div>
@@ -823,6 +865,44 @@ function hello() {
                 const languageLabel = language ? `<span class="code-language">${language}</span>` : '';
                 return `<pre>${languageLabel}<code class="language-${language}">${code.trim()}</code></pre>`;
             });
+
+            // 테이블 처리
+            markdown = markdown.replace(/(\|.*\|.*\n\|[-:| ]*\|.*\n(?:\|.*\|.*\n?)*)/gm, (match) => {
+                const lines = match.trim().split('\n');
+                if (lines.length < 2) return match;
+                
+                const headerLine = lines[0];
+                const separatorLine = lines[1];
+                const dataLines = lines.slice(2);
+                
+                // 헤더 파싱
+                const headers = headerLine.split('|').map(h => h.trim()).filter(h => h);
+                
+                // 데이터 행 파싱
+                const rows = dataLines.map(line => 
+                    line.split('|').map(cell => cell.trim()).filter(cell => cell)
+                );
+                
+                // HTML 테이블 생성
+                let tableHtml = '<table>\n<thead>\n<tr>\n';
+                headers.forEach(header => {
+                    tableHtml += `<th>${header}</th>\n`;
+                });
+                tableHtml += '</tr>\n</thead>\n<tbody>\n';
+                
+                rows.forEach(row => {
+                    if (row.length > 0) {
+                        tableHtml += '<tr>\n';
+                        row.forEach(cell => {
+                            tableHtml += `<td>${cell}</td>\n`;
+                        });
+                        tableHtml += '</tr>\n';
+                    }
+                });
+                
+                tableHtml += '</tbody>\n</table>';
+                return tableHtml;
+            });
             
             // 나머지 마크다운 처리
             let html = markdown
@@ -990,13 +1070,15 @@ $$(x + y)^n = \\sum_{k=0}^{n} \\binom{n}{k} x^{n-k} y^k$$
 ### 새로운 기능들
 ✅ **수학 수식**: $\\LaTeX$ 문법으로 아름다운 수식  
 ✅ **코드 강조**: 다양한 프로그래밍 언어 지원  
+✅ **테이블 지원**: 데이터를 깔끔하게 정리  
 ✅ **세로 스크롤**: 긴 내용도 문제없이  
 
 ### 사용법
 1. 마크다운을 입력하세요
 2. 수학 수식은 \$...\$ (인라인) 또는 \$\$...\$\$ (블록)
 3. 코드는 \\\`\\\`\\\`언어이름 으로 시작
-4. "프레젠테이션 생성" 버튼을 클릭하세요
+4. 테이블은 | 헤더1 | 헤더2 | 형식으로 작성
+5. "프레젠테이션 생성" 버튼을 클릭하세요
 
 **즐거운 프레젠테이션 되세요!** 🎉
 
@@ -1005,7 +1087,39 @@ $$(x + y)^n = \\sum_{k=0}^{n} \\binom{n}{k} x^{n-k} y^k$$
 $$\\nabla \\cdot \\vec{E} = \\frac{\\rho}{\\epsilon_0}$$
 $$\\nabla \\cdot \\vec{B} = 0$$
 $$\\nabla \\times \\vec{E} = -\\frac{\\partial \\vec{B}}{\\partial t}$$
-$$\\nabla \\times \\vec{B} = \\mu_0\\vec{J} + \\mu_0\\epsilon_0\\frac{\\partial \\vec{E}}{\\partial t}$$`;
+$$\\nabla \\times \\vec{B} = \\mu_0\\vec{J} + \\mu_0\\epsilon_0\\frac{\\partial \\vec{E}}{\\partial t}$$
+
+---
+
+# 데이터 테이블
+## 실험 결과 비교
+
+### 물리 실험 데이터
+| 실험 번호 | 질량 (kg) | 속도 (m/s) | 운동에너지 (J) | 측정 시간 |
+|-----------|-----------|------------|----------------|-----------|
+| 실험 1    | 2.5       | 10.0       | 125.0          | 09:30     |
+| 실험 2    | 3.0       | 8.5        | 108.4          | 10:15     |
+| 실험 3    | 2.0       | 12.0       | 144.0          | 11:00     |
+| 실험 4    | 4.0       | 6.0        | 72.0           | 14:30     |
+
+### 성능 비교표
+| 언어       | 실행 시간 (ms) | 메모리 사용량 (MB) | 성능 점수 |
+|------------|----------------|-------------------|-----------|
+| Python     | 1250           | 45.2              | ⭐⭐⭐       |
+| JavaScript | 890            | 38.7              | ⭐⭐⭐⭐      |
+| Java       | 650            | 125.3             | ⭐⭐⭐⭐⭐     |
+| C++        | 320            | 12.8              | ⭐⭐⭐⭐⭐     |
+
+### 기능 체크리스트
+| 기능               | 지원 여부 | 완성도 | 비고                    |
+|--------------------|-----------|--------|-------------------------|
+| 마크다운 파싱       | ✅         | 100%   | 기본 문법 모두 지원      |
+| 수학 수식          | ✅         | 100%   | LaTeX 문법 지원         |
+| 코드 문법 강조     | ✅         | 100%   | 다양한 언어 지원        |
+| **테이블 지원**    | ✅         | 100%   | **새로 추가된 기능!**   |
+| 이미지 삽입        | ❌         | 0%     | 향후 개발 예정          |
+
+> 📊 **테이블 기능이 추가되었습니다!** 이제 데이터를 깔끔하게 정리할 수 있어요.`;
 
             document.getElementById('markdown-input').value = sampleMarkdown;
             document.getElementById('editor-textarea').value = sampleMarkdown;
