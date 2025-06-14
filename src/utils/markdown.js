@@ -38,10 +38,10 @@ export class MarkdownRenderer {
 
     // Custom code block renderer
     renderer.code = (code, language) => {
-      const lang = language || ''
+      const lang = language || 'text'
       const languageLabel = lang ? `<span class="code-language">${lang}</span>` : ''
       
-      return `<pre class="relative bg-gray-50 rounded-lg p-4 my-4 overflow-x-auto">
+      return `<pre class="relative bg-gray-50 rounded-lg p-4 my-4 overflow-x-auto language-${lang}">
         ${languageLabel}
         <code class="language-${lang} text-sm">${this.escapeHtml(code)}</code>
       </pre>`

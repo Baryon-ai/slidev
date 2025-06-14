@@ -21,7 +21,25 @@ export class SlideManager {
     }
 
     const slides = []
-    const slideTexts = cleanInput.split(/\n\s*---\s*\n|\n\s*---\s*$|^\s*---\s*\n/)
+    let slideTexts = []
+    
+    // Check if document has slide separators (---)
+    if (cleanInput.includes('\n---\n') || cleanInput.includes('\n---') || cleanInput.startsWith('---')) {
+      // Split by slide separators
+      slideTexts = cleanInput.split(/\n\s*---\s*\n|\n\s*---\s*$|^\s*---\s*\n/)
+    } else {
+      // No slide separators - treat as single slide or split by H1 headers
+      const h1Matches = cleanInput.match(/^# .+$/gm)
+      if (h1Matches && h1Matches.length > 1) {
+        // Multiple H1 headers - split by H1
+        const parts = cleanInput.split(/^(?=# )/gm)
+        slideTexts = parts.filter(part => part.trim())
+      } else {
+        // Single slide
+        slideTexts = [cleanInput]
+      }
+    }
+    
     let lastH1Title = null
 
     slideTexts.forEach((slideText, index) => {
@@ -56,6 +74,14 @@ export class SlideManager {
         title = `${lastH1Title} > ${h2Title}`
       } else if (h2Title) {
         title = h2Title
+      } else if (index === 0 && !h1Title && !h2Title) {
+        // First slide without headers - use first line or default
+        const firstLine = lines.find(line => line.trim())
+        if (firstLine && firstLine.length < 50) {
+          title = firstLine.trim().replace(/^[#*-]+\s*/, '')
+        } else {
+          title = '시작'
+        }
       }
 
       // Clean title for navigation display
@@ -69,8 +95,9 @@ export class SlideManager {
       }
       const displayTitle = cleanTitle || title
 
-      // Remove title line from content
-      if (titleLineIndex >= 0) {
+      // For content, keep full slide text if no title was found
+      // Only remove title line if we found a proper header
+      if (titleLineIndex >= 0 && (h1Title || h2Title)) {
         const remainingLines = [...lines]
         remainingLines.splice(titleLineIndex, 1)
         content = remainingLines.join('\n').trim()
@@ -98,7 +125,7 @@ export class SlideManager {
     })
 
     if (slides.length === 0) {
-      throw new Error('슬라이드 내용이 없습니다. --- 으로 슬라이드를 구분하세요.')
+      throw new Error('슬라이드 내용이 없습니다.')
     }
 
     return slides
@@ -144,8 +171,6 @@ export class SlideManager {
     })
     
     navigation.appendChild(slidesContainer)
-
-    // Controls are now managed by Alpine.js automatically
   }
 
   showSlide(index) {
@@ -191,8 +216,6 @@ export class SlideManager {
         ${contentHtml}
       </div>
     `
-
-    // Page indicator is now managed by Alpine.js automatically
 
     // Update navigation active state
     this.updateNavigationActiveState(index)
@@ -246,11 +269,29 @@ export class SlideManager {
       })
     }
 
-    // Highlight code blocks
+    // Highlight code blocks with more robust detection
     if (window.Prism) {
+      // First, ensure all code blocks have proper language classes
       element.querySelectorAll('pre code').forEach((block) => {
+        // If code block doesn't have a language class, add text class
+        if (!block.className.includes('language-')) {
+          block.className += ' language-text'
+        }
+        
+        // Highlight the code
         window.Prism.highlightElement(block)
       })
+      
+      // Also highlight any pre elements that might have been missed
+      element.querySelectorAll('pre[class*="language-"]').forEach((pre) => {
+        const code = pre.querySelector('code')
+        if (code) {
+          window.Prism.highlightElement(code)
+        }
+      })
+      
+      // Force re-highlight all code elements
+      window.Prism.highlightAllUnder(element)
     }
   }
 
@@ -352,7 +393,5 @@ export class SlideManager {
         </div>
       `
     }
-
-    // Controls are now managed by Alpine.js automatically
   }
-} 
+}

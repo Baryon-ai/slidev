@@ -229,6 +229,53 @@
   color: white !important;
 }
 
+/* Fix for code blocks in different themes */
+.theme-gaia pre[class*="language-"] {
+  background: rgba(0, 0, 0, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.theme-gaia code:not([class*="language-"]) {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: #e2e8f0 !important;
+}
+
+.theme-academic pre[class*="language-"] {
+  background: #f8f9fa !important;
+  border: 2px solid #34495e !important;
+  color: #2c3e50 !important;
+}
+
+.theme-academic code[class*="language-"] {
+  color: #2c3e50 !important;
+}
+
+.theme-academic code:not([class*="language-"]) {
+  background: #ecf0f1 !important;
+  color: #2c3e50 !important;
+  border: 1px solid #bdc3c7 !important;
+}
+
+.theme-business pre[class*="language-"] {
+  background: #1a202c !important;
+  color: #e2e8f0 !important;
+}
+
+.theme-nature pre[class*="language-"] {
+  background: #2d3748 !important;
+  color: #e2e8f0 !important;
+}
+
+.theme-uncover pre[class*="language-"] {
+  background: #f8f8f8 !important;
+  border: 1px solid #e0e0e0 !important;
+  color: #333 !important;
+}
+
+.theme-uncover code[class*="language-"] {
+  color: #333 !important;
+}
+
 /* Responsive adjustments for themes */
 @media (max-width: 768px) {
   .theme-academic .prose h1 {

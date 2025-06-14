@@ -301,74 +301,121 @@ Alpine.store('app', {
   },
 
   getSampleMarkdown() {
-    return `# 🎯 Marp Vertical 소개
-## 세로 스크롤 프레젠테이션 뷰어
+    return `# What's Marp?
 
-이것은 **Marp Vertical** 프레젠테이션 뷰어입니다.
+### This is a stub page!
 
-### 주요 특징
-- 세로 스크롤링 지원
-- H1 제목 상단 고정
-- 페이지 번호 항상 표시
-- 마크다운 문법 지원
-- **수학 수식 지원** 🧮
-- **코드 문법 강조** 💻
-- **🆕 Marp 테마 시스템**: 6가지 완전히 다른 디자인
-- **🆕 연속 슬라이드**: H1 없이 H2만 있으면 이전 제목 유지
+**Marp** (**Mar**kdown **P**resentation Ecosystem) provides a great experience for _writing_ presentations with Markdown.
 
-긴 내용이 있어도 스크롤로 모든 내용을 볼 수 있습니다.
+\`\`\`markdown
+---
+marp: true
+theme: uncover
+---
 
-### 수학 수식 예제
-인라인 수학: $E = mc^2$ 
+![Marp w:240](/assets/marp-logo.svg)
 
-블록 수학:
-$$\\int_{-\\infty}^{\\infty} e^{-x^2} dx = \\sqrt{\\pi}$$
+# **Marp**
 
-\`\`\`javascript
-// JavaScript 코드 블록
-function factorial(n) {
-    if (n <= 1) return 1;
-    return n * factorial(n - 1);
-}
+Markdown Presentation Ecosystem
 
-console.log(factorial(5)); // 120
+https://marp.app/
+
+---
+
+<!-- paginate: true -->
+
+## What's Marp?
+
+Marp provides a great experience for _writing_ presentations with Markdown. :pencil:
 \`\`\`
 
-> 인용문도 이렇게 표시됩니다.
+## Concepts
+
+### Markdown
+
+[Markdown] is one of the most popular lightweight markup languages. Markdown allows the author to write presentations quickly and focus on the logical structure of the presentation (rather than the code needed to generate the presentation).
+
+The Marp ecosystem is based on [CommonMark], a consistent spec of Markdown. Marp uses CommonMark to ensure maximum compatibility across Markdown editors and with other Markdown files.
+
+### Theme CSS
+
+The Marp ecosystem is designed to be intuitive to anyone who has made a webpage. As long as you know HTML and CSS, you should be able to style your presentation easily.
 
 ---
 
-# 🎨 Marp 테마 시스템
-## 6가지 완전히 다른 디자인
+# Export Features
 
-상단의 **🎨 테마** 드롭다운에서 다양한 테마를 체험해보세요!
+## Export to PDF, PPTX, HTML
 
-### 📋 Default Theme
-- 깔끔하고 모던한 디자인
-- Tailwind CSS 기반
-- 밝은 배경에 어두운 텍스트
-- **현재 적용된 테마입니다**
+Marp has first-class support for conversion into other file formats. We prioritize reproducible rendering across formats so that users do not have to worry about different formats breaking layouts.
 
-### 🌙 Gaia Theme  
-- 어두운 배경의 우아한 디자인
-- 백드롭 블러 효과
-- 밝은 텍스트로 가독성 향상
-- 프레젠테이션에 최적화
+### Supported formats:
+- **PDF**: Perfect for presentations
+- **PPTX**: PowerPoint compatibility
+- **HTML**: Interactive web presentations
+
+\`\`\`javascript
+// Example JavaScript code
+function createSlide(content) {
+    const slide = document.createElement('div');
+    slide.className = 'slide';
+    slide.innerHTML = content;
+    return slide;
+}
+
+// Usage
+const mySlide = createSlide('<h1>Hello World!</h1>');
+document.body.appendChild(mySlide);
+\`\`\`
+
+### Math Support
+
+Inline math: $E = mc^2$
+
+Block math:
+$\\int_{-\\infty}^{\\infty} e^{-x^2} dx = \\sqrt{\\pi}$
 
 ---
 
-# 🚀 완성된 기능들
-## 모든 기능이 테마와 호환됩니다
+# Getting Started
 
-### ✅ **핵심 기능**
-- **6가지 Marp 테마**: 완전히 다른 디자인
-- **수학 수식**: $\\LaTeX$ 문법으로 아름다운 수식  
-- **코드 강조**: 다양한 프로그래밍 언어 지원  
-- **테이블 지원**: 데이터를 깔끔하게 정리  
-- **GitHub 연동**: URL만 입력하면 자동 로드  
-- **풀스크린**: 테마별 최적화된 프레젠테이션 모드
+## Easy to get started
 
-**🎨 다양한 테마로 멋진 프레젠테이션을 만들어보세요!** 🎉`
+Our ecosystem provides both a CLI and a GUI (as an VS Code extension) for authoring a Marp slide deck.
+
+> To create a slide deck, all you need to do is install Marp and write a Markdown file in the Marp format.
+
+### Features:
+1. **Real-time preview** in VS Code
+2. **Export commands** built-in
+3. **Plugin architecture** for customization
+4. **Multiple themes** available
+
+| Feature | Status | Notes |
+|---------|--------| ----- |
+| PDF Export | ✅ | Requires Chrome/Edge |
+| PPTX Export | ✅ | Full compatibility |
+| HTML Export | ✅ | Interactive features |
+| Custom Themes | ✅ | CSS-based |
+
+---
+
+# Author & License
+
+## Author
+
+We're [Marp team](https://github.com/marp-team). Currently, Marp is primarily maintained by:
+
+- **Yuki Hattori ([@yhatt](https://github.com/yhatt))** - Project owner / maintainer
+
+## License
+
+All tools and related libraries by Marp team are licensed by [MIT License](https://github.com/marp-team/marp/blob/main/LICENSE).
+
+### Contributing
+
+The best way to join us is through contributions to Marp! Check out our GitHub repository for more information.`
   }
 })
 

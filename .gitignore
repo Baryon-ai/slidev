@@ -61,3 +61,5 @@ build/
 # Backup files
 *.bak
 *.backup 
+
+.wrangler

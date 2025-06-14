@@ -8,8 +8,8 @@
 /* KaTeX Styles */
 @import url('https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css');
 
-/* Prism.js Styles */
-@import url('https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css');
+/* Prism.js Styles - Using Tomorrow theme for better contrast */
+@import url('https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css');
 
 /* Custom Styles */
 .katex { 
@@ -22,16 +22,156 @@
   overflow-y: hidden; 
 }
 
+/* Improve table styling */
+table {
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+  width: 100%;
+}
+
+table th,
+table td {
+  border: 1px solid #e2e8f0;
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+table th {
+  background-color: #f7fafc;
+  font-weight: 600;
+  color: #2d3748;
+}
+
+table tr:nth-child(even) {
+  background-color: #f9fafb;
+}
+
+/* Improve blockquote styling */
+blockquote {
+  border-left: 4px solid #4299e1;
+  background-color: #f7fafc;
+  padding: 1rem;
+  margin: 1rem 0;
+  font-style: italic;
+  color: #4a5568;
+}
+
+/* Improve list styling */
+ul, ol {
+  padding-left: 1.5rem;
+  margin: 1rem 0;
+}
+
+li {
+  margin: 0.25rem 0;
+  line-height: 1.6;
+}
+
+/* Image styling */
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 1rem 0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
 .code-language {
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
-  background: rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.7);
   padding: 0.2rem 0.5rem;
   border-radius: 3px;
   font-size: 0.7rem;
-  color: #666;
+  color: #ffffff;
   text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* Enhanced code block styling */
+pre[class*="language-"] {
+  background: #2d3748 !important;
+  border-radius: 8px !important;
+  padding: 1rem !important;
+  margin: 1rem 0 !important;
+  overflow-x: auto;
+  line-height: 1.5;
+  font-size: 0.875rem;
+}
+
+code[class*="language-"] {
+  color: #e2e8f0 !important;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Menlo', monospace !important;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+/* Inline code styling */
+code:not([class*="language-"]) {
+  background: #f7fafc !important;
+  color: #2d3748 !important;
+  padding: 0.125rem 0.375rem !important;
+  border-radius: 0.25rem !important;
+  font-size: 0.875em !important;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Menlo', monospace !important;
+}
+
+/* Code token colors - consistent across themes */
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: #718096 !important;
+}
+
+.token.punctuation {
+  color: #a0aec0 !important;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+  color: #f56565 !important;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+  color: #48bb78 !important;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+  color: #ed8936 !important;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+  color: #9f7aea !important;
+}
+
+.token.function,
+.token.class-name {
+  color: #4299e1 !important;
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+  color: #ed8936 !important;
 }
 
 /* Slide transition animations */
