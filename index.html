@@ -376,6 +376,35 @@
             margin: 0;
         }
 
+        .slide-header .parent-title {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            font-weight: normal;
+            margin-bottom: 0.3rem;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .slide-header .parent-title::before {
+            content: "📂 ";
+            opacity: 0.6;
+        }
+
+        .slide-header .sub-title {
+            color: #2c3e50;
+            font-size: 1.6rem;
+            margin: 0;
+            position: relative;
+        }
+
+        .slide-header .sub-title::before {
+            content: "└ ";
+            color: #3498db;
+            font-weight: normal;
+            margin-right: 0.5rem;
+        }
+
         .slide-content {
             flex: 1;
             padding: 2rem;
@@ -512,6 +541,14 @@
             color: #ecf0f1;
         }
 
+        .theme-dark .slide-header .parent-title {
+            color: #95a5a6;
+        }
+
+        .theme-dark .slide-header .sub-title {
+            color: #ecf0f1;
+        }
+
         .theme-dark .slide-nav-item {
             border-bottom-color: #34495e;
         }
@@ -541,6 +578,18 @@
 
         .theme-nature .slide-header h1 {
             color: white;
+        }
+
+        .theme-nature .slide-header .parent-title {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .theme-nature .slide-header .sub-title {
+            color: white;
+        }
+
+        .theme-nature .slide-header .sub-title::before {
+            color: #2ecc71;
         }
 
         .theme-nature .slide-nav-item.active {
@@ -965,35 +1014,74 @@ function hello() {
             // --- 으로 슬라이드 분할 (더 유연한 패턴)
             const slideTexts = input.split(/\n\s*---\s*\n|\n\s*---\s*$|^\s*---\s*\n/);
             
+            let lastH1Title = null; // 이전 H1 제목 추적
+            
             slideTexts.forEach((slideText, index) => {
                 slideText = slideText.trim();
                 if (!slideText) return;
                 
                 const lines = slideText.split('\n');
                 let title = `슬라이드 ${index + 1}`;
+                let h1Title = null;
+                let h2Title = null;
                 let content = slideText;
+                let titleLineIndex = -1;
                 
-                // 첫 번째 # 제목을 찾아서 타이틀로 사용
+                // H1과 H2 제목 찾기
                 for (let i = 0; i < lines.length; i++) {
                     const line = lines[i].trim();
-                    if (line.startsWith('# ')) {
-                        title = line.substring(2).trim();
-                        // 이모지와 특수문자 제거 (네비게이션 표시용)
-                        const cleanTitle = title.replace(/[📝🎯🔤📊👁️🔬🌟🚀💡🌍🧩🔍💭🎭🏗️💻🤓📚]/g, '').trim();
-                        title = cleanTitle || title;
-                        
-                        // 제목 라인을 제거한 나머지 내용
-                        const remainingLines = [...lines];
-                        remainingLines.splice(i, 1);
-                        content = remainingLines.join('\n').trim();
+                    if (line.startsWith('# ') && !h1Title) {
+                        h1Title = line.substring(2).trim();
+                        titleLineIndex = i;
                         break;
+                    } else if (line.startsWith('## ') && !h2Title) {
+                        h2Title = line.substring(3).trim();
+                        if (!h1Title) titleLineIndex = i; // H1이 없으면 H2를 제목 라인으로
                     }
                 }
                 
+                // 제목 결정 로직
+                if (h1Title) {
+                    // H1이 있으면 H1 사용하고 lastH1Title 업데이트
+                    lastH1Title = h1Title;
+                    title = h1Title;
+                } else if (h2Title && lastH1Title) {
+                    // H1이 없고 H2가 있으면서 이전 H1이 있으면 연결
+                    title = `${lastH1Title} > ${h2Title}`;
+                } else if (h2Title) {
+                    // H1이 없고 H2만 있으면 H2 사용
+                    title = h2Title;
+                }
+                
+                // 이모지와 특수문자 제거 (네비게이션 표시용)
+                const cleanTitle = title.replace(/[📝🎯🔤📊👁️🔬🌟🚀💡🌍🧩🔍💭🎭🏗️💻🤓📚]/g, '').trim();
+                const displayTitle = cleanTitle || title;
+                
+                // 제목 라인을 제거한 나머지 내용
+                if (titleLineIndex >= 0) {
+                    const remainingLines = [...lines];
+                    remainingLines.splice(titleLineIndex, 1);
+                    content = remainingLines.join('\n').trim();
+                }
+                
+                // 원본 제목 (표시용) 결정
+                let originalTitle = title;
+                if (h1Title) {
+                    originalTitle = `# ${h1Title}`;
+                } else if (h2Title && lastH1Title) {
+                    originalTitle = `# ${lastH1Title}\n## ${h2Title}`;
+                } else if (h2Title) {
+                    originalTitle = `## ${h2Title}`;
+                }
+                
                 slides.push({
-                    title: title,
+                    title: displayTitle,
                     content: content,
-                    originalTitle: lines.find(line => line.trim().startsWith('# '))?.trim() || title
+                    originalTitle: originalTitle,
+                    h1Title: h1Title,
+                    h2Title: h2Title,
+                    parentH1: lastH1Title,
+                    isSubSlide: !h1Title && h2Title && lastH1Title
                 });
             });
 
@@ -1040,11 +1128,35 @@ function hello() {
             const slide = slides[index];
             const viewer = document.getElementById('slide-viewer');
             
+            // 슬라이드 헤더 렌더링 (연속성 고려)
+            let headerHtml = '';
+            if (slide.isSubSlide) {
+                // H1 없이 H2만 있는 연속 슬라이드
+                headerHtml = `
+                    <div class="slide-header">
+                        <div class="parent-title">${slide.parentH1}</div>
+                        <h1 class="sub-title">${slide.h2Title}</h1>
+                    </div>
+                `;
+            } else if (slide.h1Title) {
+                // 일반적인 H1 슬라이드
+                headerHtml = `
+                    <div class="slide-header">
+                        <h1>${slide.h1Title}</h1>
+                    </div>
+                `;
+            } else {
+                // 기타 경우 (fallback)
+                headerHtml = `
+                    <div class="slide-header">
+                        <h1>${slide.originalTitle || slide.title}</h1>
+                    </div>
+                `;
+            }
+            
             // 슬라이드 내용 렌더링
             viewer.innerHTML = `
-                <div class="slide-header">
-                    <h1>${slide.originalTitle || slide.title}</h1>
-                </div>
+                ${headerHtml}
                 <div class="slide-content">
                     ${markdownToHtml(slide.content)}
                 </div>
@@ -1199,6 +1311,7 @@ function hello() {
 - 마크다운 문법 지원
 - **수학 수식 지원** 🧮
 - **코드 문법 강조** 💻
+- **🆕 연속 슬라이드**: H1 없이 H2만 있으면 이전 제목 유지
 
 긴 내용이 있어도 스크롤로 모든 내용을 볼 수 있습니다.
 
@@ -1316,6 +1429,7 @@ $$(x + y)^n = \\sum_{k=0}^{n} \\binom{n}{k} x^{n-k} y^k$$
 ✅ **테마 변경**: 4가지 테마 지원  
 ✅ **풀스크린**: 프레젠테이션 집중 모드  
 ✅ **레이아웃**: 목차 위치 자유자재로  
+✅ **🆕 연속 슬라이드**: H1 없이 H2만 있으면 이전 H1 제목 유지
 
 ### 🚀 사용법
 1. **직접 입력**: 마크다운을 입력하고 "프레젠테이션 생성"
@@ -1332,6 +1446,177 @@ $$(x + y)^n = \\sum_{k=0}^{n} \\binom{n}{k} x^{n-k} y^k$$
 - MARP 형식도 완벽 지원!
 
 **즐거운 프레젠테이션 되세요!** 🎉
+
+---
+
+# 머신러닝 기초
+## 개요와 소개
+
+머신러닝은 컴퓨터가 데이터로부터 학습하는 기술입니다.
+
+### 주요 개념
+- **지도학습**: 정답이 있는 데이터로 학습
+- **비지도학습**: 정답 없이 패턴 발견  
+- **강화학습**: 보상을 통한 학습
+
+\`\`\`python
+# 간단한 선형 회귀 예제
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+X = np.array([[1], [2], [3], [4], [5]])
+y = np.array([2, 4, 6, 8, 10])
+
+model = LinearRegression().fit(X, y)
+prediction = model.predict([[6]])
+print(f"예측값: {prediction[0]}")  # 12
+\`\`\`
+
+---
+
+## 지도학습 세부 내용
+> 이 슬라이드는 H1이 없고 H2만 있습니다!
+> 헤더에 "📂 머신러닝 기초 > 지도학습 세부 내용" 형태로 표시됩니다.
+
+### 분류 (Classification)
+데이터를 카테고리로 나누는 작업입니다.
+
+**주요 알고리즘**:
+- 로지스틱 회귀: $P(y=1|x) = \\frac{1}{1 + e^{-(\\beta_0 + \\beta_1 x)}}$
+- SVM: 결정 경계를 최적화
+- 랜덤 포레스트: 여러 결정 트리의 앙상블
+
+### 회귀 (Regression)
+연속적인 수치를 예측하는 작업입니다.
+
+| 알고리즘 | 수식 | 특징 |
+|----------|------|------|
+| 선형 회귀 | $y = \\beta_0 + \\beta_1 x + \\epsilon$ | 단순하고 해석 가능 |
+| 다항 회귀 | $y = \\beta_0 + \\beta_1 x + \\beta_2 x^2 + \\epsilon$ | 비선형 관계 모델링 |
+| 리지 회귀 | $\\min ||y - X\\beta||^2 + \\lambda||\\beta||^2$ | 과적합 방지 |
+
+---
+
+## 비지도학습 알고리즘
+> 이 슬라이드도 H1이 없고 H2만 있습니다!
+> "📂 머신러닝 기초 > 비지도학습 알고리즘"으로 표시됩니다.
+
+### 클러스터링
+비슷한 데이터끼리 그룹화하는 기법입니다.
+
+**K-Means 알고리즘**:
+1. k개의 중심점 랜덤 초기화
+2. 각 점을 가장 가까운 중심점에 할당
+3. 중심점을 클러스터 내 점들의 평균으로 업데이트
+4. 수렴할 때까지 2-3 반복
+
+목적 함수: $J = \\sum_{i=1}^{k} \\sum_{x \\in C_i} ||x - \\mu_i||^2$
+
+### 차원 축소
+고차원 데이터를 저차원으로 변환합니다.
+
+\`\`\`python
+# PCA 예제
+from sklearn.decomposition import PCA
+import numpy as np
+
+# 고차원 데이터 생성
+X = np.random.rand(100, 10)
+
+# PCA로 2차원으로 축소
+pca = PCA(n_components=2)
+X_reduced = pca.fit_transform(X)
+
+print(f"원본 차원: {X.shape}")
+print(f"축소 차원: {X_reduced.shape}")
+print(f"설명 분산비: {pca.explained_variance_ratio_}")
+\`\`\`
+
+---
+
+## 딥러닝 기초
+> 새로운 H1이 시작되므로 이전 연결성이 끊어집니다.
+
+딥러닝은 인공 신경망을 여러 층으로 쌓은 구조입니다.
+
+### 퍼셉트론
+가장 기본적인 신경망 단위입니다.
+
+활성화 함수: $y = f(\\sum_{i=1}^n w_i x_i + b)$
+
+**주요 활성화 함수들**:
+- 시그모이드: $\\sigma(x) = \\frac{1}{1 + e^{-x}}$
+- ReLU: $f(x) = \\max(0, x)$  
+- 탄젠트: $\\tanh(x) = \\frac{e^x - e^{-x}}{e^x + e^{-x}}$
+
+---
+
+## CNN 구조 상세
+> H1이 없으므로 "📂 딥러닝 기초 > CNN 구조 상세"로 표시됩니다.
+
+합성곱 신경망은 이미지 처리에 특화된 구조입니다.
+
+### 합성곱 연산
+2D 합성곱 수식:
+$$Y[i,j] = \\sum_{m=0}^{M-1} \\sum_{n=0}^{N-1} X[i+m, j+n] \\cdot K[m,n]$$
+
+### 주요 레이어들
+- **Conv2D**: 특징 맵 생성
+- **MaxPool2D**: 공간 크기 축소
+- **Dropout**: 과적합 방지
+- **BatchNorm**: 학습 안정화
+
+\`\`\`python
+# PyTorch CNN 예제
+import torch.nn as nn
+
+class SimpleCNN(nn.Module):
+    def __init__(self, num_classes=10):
+        super(SimpleCNN, self).__init__()
+        self.features = nn.Sequential(
+            nn.Conv2d(3, 64, kernel_size=3, padding=1),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            nn.Conv2d(64, 128, kernel_size=3, padding=1),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=2, stride=2)
+        )
+        self.classifier = nn.Sequential(
+            nn.Dropout(),
+            nn.Linear(128 * 8 * 8, 512),
+            nn.ReLU(inplace=True),
+            nn.Linear(512, num_classes)
+        )
+    
+    def forward(self, x):
+        x = self.features(x)
+        x = x.view(x.size(0), -1)
+        x = self.classifier(x)
+        return x
+\`\`\`
+
+---
+
+## RNN과 LSTM
+> 계속해서 "📂 딥러닝 기초 > RNN과 LSTM"으로 표시됩니다.
+
+순환 신경망은 시계열 데이터 처리에 적합합니다.
+
+### 기본 RNN의 한계
+- **기울기 소실**: 긴 시퀀스에서 정보 손실
+- **기울기 폭발**: 불안정한 학습
+
+### LSTM 해결책
+Long Short-Term Memory는 게이트 메커니즘을 사용합니다.
+
+**핵심 게이트들**:
+1. **Forget Gate**: $f_t = \\sigma(W_f \\cdot [h_{t-1}, x_t] + b_f)$
+2. **Input Gate**: $i_t = \\sigma(W_i \\cdot [h_{t-1}, x_t] + b_i)$
+3. **Output Gate**: $o_t = \\sigma(W_o \\cdot [h_{t-1}, x_t] + b_o)$
+
+**셀 상태 업데이트**:
+$$C_t = f_t * C_{t-1} + i_t * \\tilde{C_t}$$
+$$h_t = o_t * \\tanh(C_t)$$
 
 ### 복잡한 수식 예제
 맥스웰 방정식:
