@@ -26,6 +26,23 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            transition: all 0.3s ease;
+        }
+
+        body.fullscreen {
+            background: #000;
+        }
+
+        body.theme-dark {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        }
+
+        body.theme-light {
+            background: linear-gradient(135deg, #ecf0f1 0%, #bdc3c7 100%);
+        }
+
+        body.theme-nature {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
         }
 
         .header {
@@ -41,6 +58,22 @@
 
         .header.collapsed {
             padding: 0.5rem 1rem;
+        }
+
+        .header.hidden {
+            transform: translateY(-100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        body.fullscreen .header {
+            display: none;
+        }
+
+        body.fullscreen .viewer-container {
+            margin: 0;
+            border-radius: 0;
+            height: 100vh;
         }
 
         .header h1 {
@@ -76,6 +109,33 @@
             gap: 1rem;
             margin-bottom: 1rem;
             flex-wrap: wrap;
+        }
+
+        .control-group {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .control-group label {
+            color: white;
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+        }
+
+        .control-group select {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 6px;
+            color: white;
+            font-size: 0.8rem;
+            min-width: 80px;
+        }
+
+        .control-group select option {
+            background: #2c3e50;
+            color: white;
         }
 
         .layout-btn {
@@ -241,6 +301,16 @@
 
         .slide-navigation.hidden {
             display: none;
+        }
+
+        .slide-navigation.right {
+            order: 2;
+            border-right: none;
+            border-left: 1px solid #e9ecef;
+        }
+
+        .presentation-section.nav-right {
+            flex-direction: row-reverse;
         }
 
         .presentation-section {
@@ -426,6 +496,57 @@
             background-color: #f5f5f5;
         }
 
+        /* Theme Styles */
+        .theme-dark .slide-viewer,
+        .theme-dark .slide-navigation {
+            background: #2c3e50;
+            color: #ecf0f1;
+        }
+
+        .theme-dark .slide-header {
+            background: #34495e;
+            border-bottom-color: #3498db;
+        }
+
+        .theme-dark .slide-header h1 {
+            color: #ecf0f1;
+        }
+
+        .theme-dark .slide-nav-item {
+            border-bottom-color: #34495e;
+        }
+
+        .theme-dark .slide-nav-item:hover {
+            background: #34495e;
+        }
+
+        .theme-dark .slide-nav-item.active {
+            background: #3498db;
+        }
+
+        .theme-light .header {
+            background: rgba(52, 73, 94, 0.1);
+        }
+
+        .theme-light .layout-btn {
+            background: rgba(52, 73, 94, 0.1);
+            color: #2c3e50;
+            border-color: rgba(52, 73, 94, 0.3);
+        }
+
+        .theme-nature .slide-header {
+            background: #27ae60;
+            color: white;
+        }
+
+        .theme-nature .slide-header h1 {
+            color: white;
+        }
+
+        .theme-nature .slide-nav-item.active {
+            background: #27ae60;
+        }
+
         .page-indicator {
             position: fixed;
             bottom: 2rem;
@@ -499,6 +620,34 @@
                 flex-direction: row;
                 min-width: auto;
             }
+
+            .layout-controls {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .control-group {
+                justify-content: center;
+            }
+
+            .control-group label {
+                font-size: 0.7rem;
+            }
+
+            .layout-btn {
+                font-size: 0.8rem;
+                padding: 0.4rem 0.8rem;
+            }
+
+            body.fullscreen .page-indicator {
+                bottom: 1rem;
+                right: 1rem;
+                font-size: 0.8rem;
+            }
+
+            body.fullscreen .slide-controls {
+                bottom: 1rem;
+            }
         }
     </style>
 </head>
@@ -507,18 +656,51 @@
         <h1>🎯 Marp Vertical - 세로 스크롤 프레젠테이션 뷰어</h1>
         
         <div class="layout-controls">
-            <button class="layout-btn active" id="layout-presentation" onclick="setLayout('presentation')">
-                🎭 프레젠테이션만
-            </button>
-            <button class="layout-btn" id="layout-split" onclick="setLayout('split')">
-                📊 분할 보기
-            </button>
-            <button class="layout-btn" id="layout-editor" onclick="setLayout('editor')">
-                📝 에디터만
-            </button>
-            <button class="layout-btn toggle-btn" onclick="toggleInput()">
-                ⚙️ 입력창 토글
-            </button>
+            <!-- 레이아웃 컨트롤 -->
+            <div class="control-group">
+                <button class="layout-btn active" id="layout-presentation" onclick="setLayout('presentation')">
+                    🎭 프레젠테이션만
+                </button>
+                <button class="layout-btn" id="layout-split" onclick="setLayout('split')">
+                    📊 분할 보기
+                </button>
+                <button class="layout-btn" id="layout-editor" onclick="setLayout('editor')">
+                    📝 에디터만
+                </button>
+            </div>
+
+            <!-- 테마 선택 -->
+            <div class="control-group">
+                <label>🎨 테마:</label>
+                <select id="theme-selector" onchange="changeTheme(this.value)">
+                    <option value="default">기본</option>
+                    <option value="dark">다크</option>
+                    <option value="light">라이트</option>
+                    <option value="nature">자연</option>
+                </select>
+            </div>
+
+            <!-- 네비게이션 위치 -->
+            <div class="control-group">
+                <label>📍 목차:</label>
+                <select id="nav-position" onchange="changeNavPosition(this.value)">
+                    <option value="left">왼쪽</option>
+                    <option value="right">오른쪽</option>
+                </select>
+            </div>
+
+            <!-- 토글 버튼들 -->
+            <div class="control-group">
+                <button class="layout-btn toggle-btn" onclick="toggleInput()">
+                    ⚙️ 입력창 토글
+                </button>
+                <button class="layout-btn toggle-btn" onclick="toggleFullscreen()">
+                    🖥️ 풀스크린
+                </button>
+                <button class="layout-btn toggle-btn" onclick="loadFromGitHub()">
+                    📁 GitHub 로드
+                </button>
+            </div>
         </div>
 
         <div class="input-area" id="input-area">
@@ -620,7 +802,9 @@ function hello() {
                             • 제목은 항상 상단에 고정됩니다<br>
                             • 수학 수식 지원: $...$, $$...$$<br>
                             • 코드 문법 강조: \`\`\`언어명<br>
-                            • 테이블 지원: | 헤더 | 형식 |
+                            • 테이블 지원: | 헤더 | 형식 |<br>
+                            • 🆕 GitHub 로드: URL만 입력!<br>
+                            • 🆕 4가지 테마 + 풀스크린 모드
                         </p>
                     </div>
                 </div>
@@ -637,11 +821,27 @@ function hello() {
         <button onclick="nextSlide()">다음 →</button>
     </div>
 
+    <!-- GitHub URL 입력 모달 -->
+    <div id="github-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; justify-content: center; align-items: center;">
+        <div style="background: white; padding: 2rem; border-radius: 8px; max-width: 500px; width: 90%;">
+            <h3>GitHub 마크다운 파일 로드</h3>
+            <p>GitHub 저장소의 마크다운 파일 URL을 입력하세요:</p>
+            <input type="text" id="github-url" placeholder="https://github.com/Baryon-ai/TRAS/blob/main/slides/section2_nlp_basics.md" style="width: 100%; padding: 0.5rem; margin: 1rem 0; border: 1px solid #ddd; border-radius: 4px;">
+            <div style="display: flex; gap: 1rem;">
+                <button onclick="loadGitHubFile()" style="flex: 1;">로드</button>
+                <button onclick="closeGitHubModal()" style="flex: 1; background: #ccc;">취소</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         let slides = [];
         let currentSlide = 0;
         let currentLayout = 'presentation';
         let inputVisible = true;
+        let currentTheme = 'default';
+        let navPosition = 'left';
+        let isFullscreen = false;
 
         function setLayout(layout) {
             currentLayout = layout;
@@ -720,15 +920,23 @@ function hello() {
                 mainTextarea.value = editorTextarea.value;
             }
             
-            const input = mainTextarea.value.trim();
+            let input = mainTextarea.value.trim();
             if (!input) {
                 alert('마크다운 내용을 입력해주세요.');
                 return;
             }
 
+            // MARP 형식 처리 (frontmatter 제거)
+            if (input.startsWith('---')) {
+                const frontmatterEnd = input.indexOf('---', 3);
+                if (frontmatterEnd !== -1) {
+                    input = input.substring(frontmatterEnd + 3).trim();
+                }
+            }
+
             slides = [];
-            // --- 으로 슬라이드 분할
-            const slideTexts = input.split(/\n---\n|\n---$|^---\n/);
+            // --- 으로 슬라이드 분할 (더 유연한 패턴)
+            const slideTexts = input.split(/\n\s*---\s*\n|\n\s*---\s*$|^\s*---\s*\n/);
             
             slideTexts.forEach((slideText, index) => {
                 slideText = slideText.trim();
@@ -740,8 +948,13 @@ function hello() {
                 
                 // 첫 번째 # 제목을 찾아서 타이틀로 사용
                 for (let i = 0; i < lines.length; i++) {
-                    if (lines[i].startsWith('# ')) {
-                        title = lines[i].substring(2).trim();
+                    const line = lines[i].trim();
+                    if (line.startsWith('# ')) {
+                        title = line.substring(2).trim();
+                        // 이모지와 특수문자 제거 (네비게이션 표시용)
+                        const cleanTitle = title.replace(/[📝🎯🔤📊👁️🔬🌟🚀💡🌍🧩🔍💭🎭🏗️💻🤓📚]/g, '').trim();
+                        title = cleanTitle || title;
+                        
                         // 제목 라인을 제거한 나머지 내용
                         const remainingLines = [...lines];
                         remainingLines.splice(i, 1);
@@ -752,7 +965,8 @@ function hello() {
                 
                 slides.push({
                     title: title,
-                    content: content
+                    content: content,
+                    originalTitle: lines.find(line => line.trim().startsWith('# '))?.trim() || title
                 });
             });
 
@@ -802,7 +1016,7 @@ function hello() {
             // 슬라이드 내용 렌더링
             viewer.innerHTML = `
                 <div class="slide-header">
-                    <h1>${slide.title}</h1>
+                    <h1>${slide.originalTitle || slide.title}</h1>
                 </div>
                 <div class="slide-content">
                     ${markdownToHtml(slide.content)}
@@ -1067,18 +1281,28 @@ $$(x + y)^n = \\sum_{k=0}^{n} \\binom{n}{k} x^{n-k} y^k$$
 # 마무리
 ## 감사합니다!
 
-### 새로운 기능들
+### 🆕 새로운 기능들
 ✅ **수학 수식**: $\\LaTeX$ 문법으로 아름다운 수식  
 ✅ **코드 강조**: 다양한 프로그래밍 언어 지원  
 ✅ **테이블 지원**: 데이터를 깔끔하게 정리  
-✅ **세로 스크롤**: 긴 내용도 문제없이  
+✅ **GitHub 연동**: URL만 입력하면 자동 로드  
+✅ **테마 변경**: 4가지 테마 지원  
+✅ **풀스크린**: 프레젠테이션 집중 모드  
+✅ **레이아웃**: 목차 위치 자유자재로  
 
-### 사용법
-1. 마크다운을 입력하세요
-2. 수학 수식은 \$...\$ (인라인) 또는 \$\$...\$\$ (블록)
-3. 코드는 \\\`\\\`\\\`언어이름 으로 시작
-4. 테이블은 | 헤더1 | 헤더2 | 형식으로 작성
-5. "프레젠테이션 생성" 버튼을 클릭하세요
+### 🚀 사용법
+1. **직접 입력**: 마크다운을 입력하고 "프레젠테이션 생성"
+2. **GitHub 로드**: "📁 GitHub 로드" → URL 입력 → 자동 풀스크린
+3. **테마 변경**: 🎨 테마 드롭다운에서 선택
+4. **레이아웃**: 📍 목차 위치를 왼쪽/오른쪽 선택
+5. **풀스크린**: 🖥️ 풀스크린으로 프레젠테이션 집중
+6. **ESC 키**: 풀스크린 모드 해제
+
+### 💡 지원 문법
+- 수학 수식: \$...\$ (인라인), \$\$...\$\$ (블록)
+- 코드: \\\`\\\`\\\`언어이름 으로 시작  
+- 테이블: | 헤더1 | 헤더2 | 형식
+- MARP 형식도 완벽 지원!
 
 **즐거운 프레젠테이션 되세요!** 🎉
 
@@ -1189,6 +1413,113 @@ $$\\nabla \\times \\vec{B} = \\mu_0\\vec{J} + \\mu_0\\epsilon_0\\frac{\\partial 
                 nextSlide();
             }
         });
+
+        // 테마 변경 함수
+        function changeTheme(theme) {
+            currentTheme = theme;
+            const body = document.body;
+            body.className = body.className.replace(/theme-\w+/g, '');
+            if (theme !== 'default') {
+                body.classList.add(`theme-${theme}`);
+            }
+            if (isFullscreen) {
+                body.classList.add('fullscreen');
+            }
+        }
+
+        // 네비게이션 위치 변경
+        function changeNavPosition(position) {
+            navPosition = position;
+            const presentationSection = document.getElementById('presentation-section');
+            const slideNavigation = document.getElementById('slide-navigation');
+            
+            if (position === 'right') {
+                presentationSection.classList.add('nav-right');
+                slideNavigation.classList.add('right');
+            } else {
+                presentationSection.classList.remove('nav-right');
+                slideNavigation.classList.remove('right');
+            }
+        }
+
+        // 풀스크린 토글
+        function toggleFullscreen() {
+            isFullscreen = !isFullscreen;
+            const body = document.body;
+            
+            if (isFullscreen) {
+                body.classList.add('fullscreen');
+                // 프레젠테이션 모드로 강제 전환
+                setLayout('presentation');
+                // ESC 키 리스너 추가
+                document.addEventListener('keydown', escapeFullscreen);
+            } else {
+                body.classList.remove('fullscreen');
+                document.removeEventListener('keydown', escapeFullscreen);
+            }
+        }
+
+        function escapeFullscreen(e) {
+            if (e.key === 'Escape' && isFullscreen) {
+                toggleFullscreen();
+            }
+        }
+
+        // GitHub 모달 관련 함수들
+        function loadFromGitHub() {
+            document.getElementById('github-modal').style.display = 'flex';
+        }
+
+        function closeGitHubModal() {
+            document.getElementById('github-modal').style.display = 'none';
+            document.getElementById('github-url').value = '';
+        }
+
+        // GitHub URL을 Raw URL로 변환
+        function convertToRawUrl(githubUrl) {
+            if (githubUrl.includes('github.com') && githubUrl.includes('/blob/')) {
+                return githubUrl.replace('github.com', 'raw.githubusercontent.com').replace('/blob/', '/');
+            }
+            return githubUrl;
+        }
+
+        // GitHub 파일 로드
+        async function loadGitHubFile() {
+            const url = document.getElementById('github-url').value.trim();
+            if (!url) {
+                alert('URL을 입력해주세요.');
+                return;
+            }
+
+            try {
+                const rawUrl = convertToRawUrl(url);
+                const response = await fetch(rawUrl);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const markdown = await response.text();
+                
+                // 마크다운 데이터를 텍스트 영역에 입력
+                document.getElementById('markdown-input').value = markdown;
+                document.getElementById('editor-textarea').value = markdown;
+                
+                // 자동으로 프레젠테이션 생성
+                parseMarkdown();
+                
+                // 모달 닫기
+                closeGitHubModal();
+                
+                // 풀스크린 모드로 전환
+                if (!isFullscreen) {
+                    toggleFullscreen();
+                }
+                
+            } catch (error) {
+                alert(`파일 로드 실패: ${error.message}\n\n올바른 GitHub URL인지 확인해주세요.\n예: https://github.com/user/repo/blob/main/file.md`);
+            }
+        }
 
         // 초기 로드 시 샘플 표시
         window.addEventListener('load', function() {
