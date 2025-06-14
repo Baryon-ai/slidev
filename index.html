@@ -4,6 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Marp Vertical - 세로 스크롤 프레젠테이션</title>
+    <meta name="description" content="GitHub 마크다운을 아름다운 세로 스크롤 프레젠테이션으로 변환하는 모던 웹 애플리케이션. 6가지 Marp 테마, 수식, 코드 강조, GitHub 연동, 반응형, 풀스크린 지원." />
+    <meta property="og:title" content="Marp Vertical - 세로 스크롤 프레젠테이션 뷰어" />
+    <meta property="og:description" content="GitHub 마크다운을 아름다운 세로 스크롤 프레젠테이션으로 변환하는 모던 웹앱. 6가지 테마, 수식, 코드, GitHub 연동, 반응형, 풀스크린 지원." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://your-domain.com" />
+    <meta property="og:image" content="/og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Marp Vertical - 세로 스크롤 프레젠테이션 뷰어" />
+    <meta name="twitter:description" content="GitHub 마크다운을 아름다운 세로 스크롤 프레젠테이션으로 변환하는 모던 웹앱. 6가지 테마, 수식, 코드, GitHub 연동, 반응형, 풀스크린 지원." />
+    <meta name="twitter:image" content="/og-image.png" />
     
     <!-- Styles -->
     <link rel="stylesheet" href="/src/styles/main.css">
@@ -275,5 +285,37 @@
 
     <!-- Scripts -->
     <script type="module" src="/src/scripts/main.js"></script>
+    <script>
+      // 동적 SEO: url 파라미터가 있으면 해당 마크다운의 제목을 SEO에 반영
+      (async function() {
+        const params = new URLSearchParams(window.location.search);
+        const url = params.get('url');
+        if (url) {
+          // 파일명 추출
+          let title = url.split('/').pop().replace(/\.md$/, '');
+          // 마크다운 첫 H1 추출 시도
+          try {
+            const resp = await fetch(url);
+            if (resp.ok) {
+              const text = await resp.text();
+              const h1 = text.match(/^#\s+(.+)$/m);
+              if (h1 && h1[1]) title = h1[1];
+            }
+          } catch(e) {}
+          document.title = title + ' - Marp Vertical';
+          // SEO meta 동적 변경
+          const desc = document.querySelector('meta[name="description"]');
+          if (desc) desc.setAttribute('content', title + ' | GitHub 마크다운 프레젠테이션 뷰어');
+          const ogt = document.querySelector('meta[property="og:title"]');
+          if (ogt) ogt.setAttribute('content', title + ' - Marp Vertical');
+          const ogd = document.querySelector('meta[property="og:description"]');
+          if (ogd) ogd.setAttribute('content', title + ' | GitHub 마크다운 프레젠테이션 뷰어');
+          const twt = document.querySelector('meta[name="twitter:title"]');
+          if (twt) twt.setAttribute('content', title + ' - Marp Vertical');
+          const twd = document.querySelector('meta[name="twitter:description"]');
+          if (twd) twd.setAttribute('content', title + ' | GitHub 마크다운 프레젠테이션 뷰어');
+        }
+      })();
+    </script>
 </body>
 </html> 
