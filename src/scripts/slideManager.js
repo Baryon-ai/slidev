@@ -59,7 +59,14 @@ export class SlideManager {
       }
 
       // Clean title for navigation display
-      const cleanTitle = title.replace(/[📝🎯🔤📊👁️🔬🌟🚀💡🌍🧩🔍💭🎭🏗️💻🤓📚]/g, '').trim()
+      let cleanTitle
+      try {
+        // 최신 브라우저: Unicode property \p{Extended_Pictographic}
+        cleanTitle = title.replace(/\p{Extended_Pictographic}/gu, '').trim()
+      } catch (e) {
+        // 폴백: BMP/비BMP 이모지 범위 제거
+        cleanTitle = title.replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, '').trim()
+      }
       const displayTitle = cleanTitle || title
 
       // Remove title line from content
