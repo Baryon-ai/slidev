@@ -100,7 +100,7 @@ marp_vertical_viewer/
 #### 📁 GitHub 연동
 ```
 # URL 파라미터로 직접 접근
-https://your-domain.com/?url=https://github.com/user/repo/blob/main/slides.md
+https://slidev.wwwai.com/?url=https://github.com/user/repo/blob/main/slides.md
 
 # 또는 "📁 GitHub" 버튼 사용
 ```
@@ -119,7 +119,7 @@ https://your-domain.com/?url=https://github.com/user/repo/blob/main/slides.md
 **TRAS NLP 기초 슬라이드**로 모든 기능을 체험해보세요:
 
 ```
-https://your-domain.com/?url=https://github.com/Baryon-ai/TRAS/blob/main/slides/section2_nlp_basics.md
+https://slidev.wwwai.com/?url=https://github.com/Baryon-ai/TRAS/blob/main/slides/section2_nlp_basics.md
 ```
 
 ## 🎨 테마 가이드
@@ -185,7 +185,7 @@ MIT License에 따라 배포됩니다. 자세한 내용은 `LICENSE` 파일을 �
 
 ## 🔗 관련 링크
 
-- **공식 웹사이트**: [your-domain.com](https://your-domain.com)
+- **공식 웹사이트**: [slidev.wwwai.com](https://slidev.wwwai.com)
 - **데모 슬라이드**: [TRAS NLP 기초](https://github.com/Baryon-ai/TRAS/blob/main/slides/section2_nlp_basics.md)
 - **이슈 리포트**: [GitHub Issues](https://github.com/your-username/marp-vertical-viewer/issues)
 
