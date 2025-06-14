@@ -4,19 +4,38 @@ export class GitHubLoader {
   }
 
   async loadFile(url) {
+    console.log('GitHubLoader.loadFile called with:', url)
+    
     if (!url?.trim()) {
       throw new Error('URL을 입력해주세요.')
     }
 
     try {
       const rawUrl = this.convertToRawUrl(url)
-      const response = await fetch(rawUrl)
+      console.log('Converted to raw URL:', rawUrl)
+      
+      // Cloudflare Worker 프록시 주소 사용
+      const proxy = 'https://github-cors-proxy.hongbuzz.workers.dev'
+      const proxiedUrl = `${proxy}/?url=${encodeURIComponent(rawUrl)}`
+      const response = await fetch(proxiedUrl, {
+        method: 'GET',
+        headers: {
+          'Accept': 'text/plain, text/markdown, */*',
+          'Cache-Control': 'no-cache'
+        }
+      })
+
+      console.log('Fetch response status:', response.status)
+      console.log('Fetch response ok:', response.ok)
 
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`)
       }
 
       const markdown = await response.text()
+      console.log('Successfully fetched markdown, length:', markdown.length)
+      console.log('First 200 chars:', markdown.substring(0, 200))
+      
       return markdown
       
     } catch (error) {
@@ -26,12 +45,19 @@ export class GitHubLoader {
   }
 
   convertToRawUrl(githubUrl) {
+    console.log('Converting GitHub URL to raw URL:', githubUrl)
+    
     // Convert GitHub blob URL to raw URL
     if (githubUrl.includes('github.com') && githubUrl.includes('/blob/')) {
-      return githubUrl
+      const rawUrl = githubUrl
         .replace('github.com', 'raw.githubusercontent.com')
         .replace('/blob/', '/')
+      
+      console.log('Converted URL:', rawUrl)
+      return rawUrl
     }
+    
+    console.log('URL is already in raw format or not a GitHub blob URL')
     return githubUrl
   }
 

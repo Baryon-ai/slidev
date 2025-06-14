@@ -26,6 +26,8 @@ Alpine.store('app', {
 
   // Initialize app
   init() {
+    console.log('Alpine.js store init() called')
+    
     // Create managers outside of Alpine's reactivity system
     window._managers = {
       slideManager: new SlideManager(this),
@@ -33,12 +35,16 @@ Alpine.store('app', {
       githubLoader: new GitHubLoader(this),
       markdownRenderer: new MarkdownRenderer()
     }
+    
+    console.log('Managers created:', window._managers)
 
     // Setup keyboard shortcuts
     this.setupKeyboardShortcuts()
+    console.log('Keyboard shortcuts set up')
 
     // Load from URL parameters or sample
     this.initializeContent()
+    console.log('Init completed')
   },
 
   // Helper methods to access managers
@@ -59,13 +65,20 @@ Alpine.store('app', {
 
   // Slide Management
   parseMarkdown(input) {
+    console.log('parseMarkdown called with input length:', input.length)
+    console.log('Input preview:', input.substring(0, 200))
+    
     this.isLoading = true
     try {
       const slides = this.slideManager.parseMarkdown(input)
+      console.log('SlideManager parsed slides:', slides.length)
+      
       this.slides = slides
       this.currentSlide = 0
       this.slideManager.renderSlides()
       this.showSlide(0)
+      
+      console.log('Successfully parsed and rendered slides')
     } catch (error) {
       console.error('Markdown parsing error:', error)
       alert('마크다운 파싱 중 오류가 발생했습니다.')
@@ -170,18 +183,35 @@ Alpine.store('app', {
 
   // GitHub Integration
   async loadFromGitHub(url) {
+    console.log('Loading from GitHub:', url)
+    
+    if (!this.githubLoader) {
+      console.error('GitHubLoader not available')
+      alert('GitHub 로더가 초기화되지 않았습니다.')
+      return
+    }
+    
     try {
       this.isLoading = true
+      console.log('Starting GitHub file load...')
+      
       const markdown = await this.githubLoader.loadFile(url)
+      console.log('Successfully loaded markdown, length:', markdown.length)
+      
       this.markdownInput = markdown
       this.parseMarkdown(markdown)
       
+      console.log('Parsed slides count:', this.slides.length)
+      
       if (!this.isFullscreen) {
+        console.log('Entering fullscreen mode...')
         this.toggleFullscreen()
       }
     } catch (error) {
       console.error('GitHub load error:', error)
-      alert('GitHub 파일 로드 중 오류가 발생했습니다.')
+      alert(`GitHub 파일 로드 중 오류가 발생했습니다:\n${error.message}\n\n샘플을 대신 로드합니다.`)
+      // 에러 발생 시 샘플 로드
+      this.loadSample()
     } finally {
       this.isLoading = false
     }
@@ -246,14 +276,26 @@ Alpine.store('app', {
 
   // Initialize content from URL or sample
   initializeContent() {
+    console.log('Initializing content...')
+    console.log('Current URL:', window.location.href)
+    
     const urlParams = new URLSearchParams(window.location.search)
+    console.log('URL search params:', window.location.search)
+    
     const githubUrl = urlParams.get('url') || urlParams.get('github') || urlParams.get('md')
+    console.log('Extracted GitHub URL:', githubUrl)
     
     if (githubUrl) {
       const decodedUrl = decodeURIComponent(githubUrl)
+      console.log('Decoded URL:', decodedUrl)
       this.githubUrl = decodedUrl
-      this.loadFromGitHub(decodedUrl)
+      
+      // 약간의 딜레이를 주어 UI가 준비될 시간을 줌
+      setTimeout(() => {
+        this.loadFromGitHub(decodedUrl)
+      }, 100)
     } else {
+      console.log('No GitHub URL found, loading sample...')
       this.loadSample()
     }
   },
@@ -330,9 +372,12 @@ console.log(factorial(5)); // 120
   }
 })
 
-// Initialize Alpine.js when DOM is ready
+// Set up Alpine.js immediately
+window.Alpine = Alpine
+
+// Start Alpine.js when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-  window.Alpine = Alpine
+  console.log('DOM loaded, starting Alpine.js...')
   Alpine.start()
 })
 
