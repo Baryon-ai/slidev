@@ -30,6 +30,8 @@ Alpine.store('app', {
   touchStartY: 0,
   touchEndX: 0,
   touchEndY: 0,
+  // URL state
+  isInitialLoad: true,
 
   // Initialize app
   init() {
@@ -48,6 +50,7 @@ Alpine.store('app', {
     // Detect mobile and setup event listeners
     this.detectMobile()
     this.setupTouchGestures()
+    this.setupPopstateHandler()
     
     // Setup keyboard shortcuts
     this.setupKeyboardShortcuts()
@@ -87,7 +90,12 @@ Alpine.store('app', {
       this.slides = slides
       this.currentSlide = 0
       this.slideManager.renderSlides()
-      this.showSlide(0)
+      
+      // URL에서 슬라이드 인덱스 확인 후 해당 슬라이드로 이동
+      if (!this.loadSlideFromURL()) {
+        // URL에 슬라이드 정보가 없으면 첫 번째 슬라이드 표시
+        this.showSlide(0)
+      }
       
       console.log('Successfully parsed and rendered slides')
     } catch (error) {
@@ -104,6 +112,9 @@ Alpine.store('app', {
       this.isSlideTransitioning = true
       this.currentSlide = index
       this.slideManager.showSlide(index)
+      
+      // URL 업데이트
+      this.updateURL()
       
       // 모바일에서 슬라이드 변경 시 네비게이션 닫기
       if (this.isMobile && this.mobileNavOpen) {
@@ -183,7 +194,56 @@ Alpine.store('app', {
     document.body.classList.remove('fullscreen-mode')
   },
 
-  // Mobile Functions
+  // URL Management
+  updateURL() {
+    const params = new URLSearchParams(window.location.search)
+    
+    // Keep existing url parameter if present
+    const existingUrl = params.get('url') || params.get('github') || params.get('md')
+    
+    // Update slide parameter
+    if (this.currentSlide > 0) {
+      params.set('slide', this.currentSlide + 1) // 1-based for user-friendly URLs
+    } else {
+      params.delete('slide')
+    }
+    
+    // Update browser URL
+    const newUrl = `${window.location.pathname}${params.toString() ? '?' + params.toString() : ''}`
+    if (window.location.href !== window.location.origin + newUrl) {
+      if (this.isInitialLoad) {
+        // Use replaceState for initial load to avoid creating history entry
+        window.history.replaceState({ slide: this.currentSlide }, '', newUrl)
+        this.isInitialLoad = false
+      } else {
+        // Use pushState for subsequent navigation to enable back/forward
+        window.history.pushState({ slide: this.currentSlide }, '', newUrl)
+      }
+    }
+  },
+
+  loadSlideFromURL() {
+    const params = new URLSearchParams(window.location.search)
+    const slideParam = params.get('slide')
+    
+    if (slideParam) {
+      const slideIndex = parseInt(slideParam) - 1 // Convert to 0-based index
+      if (slideIndex >= 0 && slideIndex < this.slides.length) {
+        this.showSlide(slideIndex)
+        return true
+      }
+    }
+    return false
+  },
+  setupPopstateHandler() {
+    // Handle browser back/forward buttons
+    window.addEventListener('popstate', (event) => {
+      if (this.slides.length > 0) {
+        this.loadSlideFromURL()
+      }
+    })
+  },
+
   detectMobile() {
     this.isMobile = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
     
