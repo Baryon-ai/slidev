@@ -84,6 +84,20 @@
     x-data="$store.app"
     x-init="init()"
 >
+    <!-- Mobile Navigation Overlay -->
+    <div 
+        class="mobile-overlay" 
+        id="mobile-overlay"
+        x-show="isMobile && mobileNavOpen" 
+        @click="mobileNavOpen = false"
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+    ></div>
+
     <!-- Header -->
     <header 
         class="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-200 shadow-sm" 
@@ -151,17 +165,26 @@
                         </select>
                     </div>
 
+                    <!-- Mobile Menu Toggle -->
+                    <button 
+                        @click="toggleMobileNav()"
+                        class="md:hidden px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors touch-button"
+                        x-show="!isFullscreen"
+                    >
+                        📋 메뉴
+                    </button>
+                    
                     <!-- Action Buttons -->
                     <button 
                         @click="toggleInput()"
-                        class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                        class="hidden md:inline-flex px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
                     >
                         ⚙️ 입력창
                     </button>
                     
                     <button 
                         @click="toggleFullscreen()"
-                        class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                        class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors touch-button"
                     >
                         🖥️ 풀스크린
                     </button>
@@ -178,7 +201,8 @@
             <!-- Input Area -->
             <div 
                 class="transition-all duration-300 overflow-hidden"
-                x-show="inputVisible"
+                :class="isMobile ? 'mobile-input-area' : ''"
+                x-show="inputVisible && !isMobile"
                 x-transition
             >
                 <div class="flex flex-col lg:flex-row gap-4 pb-4">
@@ -265,13 +289,36 @@
             <div 
                 class="w-64 bg-gray-50 overflow-y-auto border-r border-gray-200" 
                 id="slide-navigation"
-                :class="navPosition === 'right' ? 'border-l border-r-0' : ''"
+                :class="{
+                    'border-l border-r-0': navPosition === 'right',
+                    'mobile-nav-hidden': isMobile && !mobileNavOpen,
+                    'mobile-nav-visible': isMobile && mobileNavOpen
+                }"
             >
+                <!-- Mobile Navigation Header -->
+                <div class="md:hidden p-4 border-b border-gray-200 bg-white">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-semibold text-gray-900">슬라이드 목록</h3>
+                        <button 
+                            @click="mobileNavOpen = false"
+                            class="p-2 text-gray-500 hover:text-gray-700 touch-button"
+                        >
+                            ✕
+                        </button>
+                    </div>
+                </div>
                 <!-- Content will be populated by JavaScript -->
                 </div>
 
             <!-- Slide Viewer -->
-            <div class="flex-1 flex flex-col" id="slide-viewer">
+            <div 
+                class="flex-1 flex flex-col touch-area" 
+                id="slide-viewer"
+                :class="isMobile ? 'mobile-slide-viewer' : ''"
+            >
+                <!-- Swipe Indicators -->
+                <div class="swipe-indicator left" id="swipe-left">←</div>
+                <div class="swipe-indicator right" id="swipe-right">→</div>
                 <!-- Content will be populated by JavaScript -->
             </div>
         </div>
@@ -281,12 +328,13 @@
     <div 
         class="fixed bottom-6 right-6 bg-brand-600 text-white px-4 py-2 rounded-full font-semibold text-sm shadow-lg z-50"
         id="page-indicator"
-        x-show="slides.length > 0"
+        x-show="slides.length > 0 && (!isMobile || isFullscreen)"
         x-text="(currentSlide + 1) + ' / ' + slides.length"
     ></div>
 
+    <!-- Desktop Controls -->
     <div 
-        class="fixed bottom-6 left-1/2 transform -translate-x-1/2 flex gap-2 z-50"
+        class="hidden md:flex fixed bottom-6 left-1/2 transform -translate-x-1/2 gap-2 z-50"
         id="slide-controls"
         x-show="slides.length > 0"
     >
@@ -302,7 +350,41 @@
         >
             다음 →
         </button>
-                    </div>
+    </div>
+
+    <!-- Mobile Controls -->
+    <div 
+        class="md:hidden mobile-controls"
+        x-show="slides.length > 0 && isMobile"
+    >
+        <button 
+            @click="toggleMobileNav()"
+            class="bg-white/20 text-white rounded-xl touch-button flex items-center justify-center"
+        >
+            📋
+        </button>
+        <button 
+            @click="previousSlide()"
+            class="bg-white/20 text-white rounded-xl touch-button flex items-center justify-center"
+        >
+            ←
+        </button>
+        <div class="bg-white/20 text-white rounded-xl px-3 py-2 text-sm font-medium min-w-[60px] text-center">
+            <span x-text="(currentSlide + 1) + '/' + slides.length"></span>
+        </div>
+        <button 
+            @click="nextSlide()"
+            class="bg-white/20 text-white rounded-xl touch-button flex items-center justify-center"
+        >
+            →
+        </button>
+        <button 
+            @click="toggleFullscreen()"
+            class="bg-white/20 text-white rounded-xl touch-button flex items-center justify-center"
+        >
+            🖥️
+        </button>
+    </div>
 
     <!-- GitHub Modal -->
     <div 

@@ -276,6 +276,36 @@
   color: #333 !important;
 }
 
+/* Mobile theme adjustments */
+@media (max-width: 768px) {
+  /* Mobile navigation for themes */
+  .theme-gaia #slide-navigation {
+    background: rgba(26, 26, 46, 0.95) !important;
+    backdrop-filter: blur(20px);
+  }
+  
+  .theme-gaia .mobile-overlay.active {
+    background: rgba(0, 0, 0, 0.7);
+  }
+  
+  /* Mobile controls for themes */
+  .theme-gaia .mobile-controls {
+    background: rgba(0, 0, 0, 0.9) !important;
+  }
+  
+  .theme-academic .mobile-controls {
+    background: rgba(52, 73, 94, 0.9) !important;
+  }
+  
+  .theme-business .mobile-controls {
+    background: rgba(102, 126, 234, 0.9) !important;
+  }
+  
+  .theme-nature .mobile-controls {
+    background: rgba(47, 133, 90, 0.9) !important;
+  }
+}
+
 /* Responsive adjustments for themes */
 @media (max-width: 768px) {
   .theme-academic .prose h1 {

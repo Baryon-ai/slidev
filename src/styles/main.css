@@ -222,6 +222,139 @@ code:not([class*="language-"]) {
   @apply bg-gray-400;
 }
 
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+  /* Mobile navigation */
+  .mobile-nav-hidden {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .mobile-nav-visible {
+    transform: translateX(0);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  /* Mobile slide viewer */
+  .mobile-slide-viewer {
+    width: 100% !important;
+  }
+  
+  /* Mobile controls */
+  .mobile-controls {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    display: flex;
+    gap: 0.5rem;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    padding: 0.75rem;
+    border-radius: 2rem;
+  }
+  
+  .mobile-controls button {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    border-radius: 1rem;
+  }
+  
+  /* Touch-friendly buttons */
+  .touch-button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Mobile header adjustments */
+  #header {
+    padding: 1rem 0.5rem;
+  }
+  
+  #header h1 {
+    font-size: 1.5rem !important;
+    margin-bottom: 1rem;
+  }
+  
+  /* Mobile input area */
+  .mobile-input-area {
+    padding: 0.5rem;
+  }
+  
+  .mobile-input-area textarea {
+    min-height: 120px;
+  }
+  
+  /* Mobile slide navigation */
+  #slide-navigation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 85vw;
+    max-width: 320px;
+    height: 100vh;
+    z-index: 1000;
+    background: white;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+  }
+  
+  /* Mobile overlay */
+  .mobile-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease-in-out;
+  }
+  
+  .mobile-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  
+  /* Mobile page indicator */
+  #page-indicator {
+    bottom: 100px !important;
+  }
+}
+
+/* Touch gestures */
+.touch-area {
+  touch-action: pan-y;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.swipe-indicator {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+  font-size: 2rem;
+  color: rgba(59, 130, 246, 0.7);
+  pointer-events: none;
+}
+
+.swipe-indicator.left {
+  left: 20px;
+}
+
+.swipe-indicator.right {
+  right: 20px;
+}
+
+.swipe-indicator.active {
+  opacity: 1;
+}
+
 /* Fullscreen mode */
 .fullscreen-mode {
   @apply bg-black;
@@ -233,4 +366,15 @@ code:not([class*="language-"]) {
 
 .fullscreen-mode #viewer-container {
   @apply h-screen m-0 rounded-none;
+}
+
+/* Mobile fullscreen adjustments */
+@media (max-width: 768px) {
+  .fullscreen-mode .mobile-controls {
+    background: rgba(0, 0, 0, 0.9);
+  }
+  
+  .fullscreen-mode #page-indicator {
+    bottom: 20px !important;
+  }
 } 

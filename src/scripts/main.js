@@ -23,6 +23,13 @@ Alpine.store('app', {
   isSlideTransitioning: false,
   markdownInput: '',
   githubUrl: '',
+  // Mobile state
+  isMobile: false,
+  mobileNavOpen: false,
+  touchStartX: 0,
+  touchStartY: 0,
+  touchEndX: 0,
+  touchEndY: 0,
 
   // Initialize app
   init() {
@@ -38,6 +45,10 @@ Alpine.store('app', {
     
     console.log('Managers created:', window._managers)
 
+    // Detect mobile and setup event listeners
+    this.detectMobile()
+    this.setupTouchGestures()
+    
     // Setup keyboard shortcuts
     this.setupKeyboardShortcuts()
     console.log('Keyboard shortcuts set up')
@@ -93,6 +104,11 @@ Alpine.store('app', {
       this.isSlideTransitioning = true
       this.currentSlide = index
       this.slideManager.showSlide(index)
+      
+      // 모바일에서 슬라이드 변경 시 네비게이션 닫기
+      if (this.isMobile && this.mobileNavOpen) {
+        this.mobileNavOpen = false
+      }
       
       // 짧은 딜레이 후 전환 완료 처리
       setTimeout(() => {
@@ -165,6 +181,112 @@ Alpine.store('app', {
 
   exitFullscreen() {
     document.body.classList.remove('fullscreen-mode')
+  },
+
+  // Mobile Functions
+  detectMobile() {
+    this.isMobile = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+    
+    // Listen for resize events
+    window.addEventListener('resize', () => {
+      this.isMobile = window.innerWidth <= 768
+      if (!this.isMobile) {
+        this.mobileNavOpen = false
+      }
+    })
+  },
+
+  toggleMobileNav() {
+    this.mobileNavOpen = !this.mobileNavOpen
+  },
+
+  setupTouchGestures() {
+    const slideViewer = document.getElementById('slide-viewer')
+    if (!slideViewer) return
+
+    let touchStartTime = 0
+    const swipeThreshold = 50 // minimum distance for swipe
+    const timeThreshold = 300 // maximum time for swipe (ms)
+
+    slideViewer.addEventListener('touchstart', (e) => {
+      if (!this.isMobile) return
+      
+      touchStartTime = Date.now()
+      this.touchStartX = e.touches[0].clientX
+      this.touchStartY = e.touches[0].clientY
+    }, { passive: true })
+
+    slideViewer.addEventListener('touchmove', (e) => {
+      if (!this.isMobile) return
+      
+      this.touchEndX = e.touches[0].clientX
+      this.touchEndY = e.touches[0].clientY
+      
+      const deltaX = this.touchEndX - this.touchStartX
+      const deltaY = Math.abs(this.touchEndY - this.touchStartY)
+      
+      // Show swipe indicators
+      const leftIndicator = document.getElementById('swipe-left')
+      const rightIndicator = document.getElementById('swipe-right')
+      
+      if (Math.abs(deltaX) > 20 && deltaY < 50) {
+        if (deltaX > 0 && this.currentSlide > 0) {
+          leftIndicator?.classList.add('active')
+          rightIndicator?.classList.remove('active')
+        } else if (deltaX < 0 && this.currentSlide < this.slides.length - 1) {
+          rightIndicator?.classList.add('active')
+          leftIndicator?.classList.remove('active')
+        }
+      } else {
+        leftIndicator?.classList.remove('active')
+        rightIndicator?.classList.remove('active')
+      }
+    }, { passive: true })
+
+    slideViewer.addEventListener('touchend', (e) => {
+      if (!this.isMobile) return
+      
+      const touchEndTime = Date.now()
+      const timeDiff = touchEndTime - touchStartTime
+      
+      if (timeDiff > timeThreshold) return
+      
+      const deltaX = this.touchEndX - this.touchStartX
+      const deltaY = Math.abs(this.touchEndY - this.touchStartY)
+      
+      // Hide indicators
+      document.getElementById('swipe-left')?.classList.remove('active')
+      document.getElementById('swipe-right')?.classList.remove('active')
+      
+      // Check if it's a horizontal swipe
+      if (Math.abs(deltaX) > swipeThreshold && deltaY < swipeThreshold) {
+        if (deltaX > 0) {
+          // Swipe right - previous slide
+          this.previousSlide()
+        } else {
+          // Swipe left - next slide
+          this.nextSlide()
+        }
+      }
+      
+      // Reset touch coordinates
+      this.touchStartX = 0
+      this.touchStartY = 0
+      this.touchEndX = 0
+      this.touchEndY = 0
+    }, { passive: true })
+
+    // Close mobile nav when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!this.isMobile || !this.mobileNavOpen) return
+      
+      const nav = document.getElementById('slide-navigation')
+      const overlay = document.getElementById('mobile-overlay')
+      
+      if (nav && !nav.contains(e.target) && overlay && overlay.contains(e.target)) {
+        this.mobileNavOpen = false
+      }
+    })
   },
 
   // Content Management
