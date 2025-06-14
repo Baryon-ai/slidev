@@ -272,26 +272,42 @@ code:not([class*="language-"]) {
   
   /* Mobile header adjustments */
   #header {
-    padding: 0.75rem 0.5rem;
+    padding: 0.5rem;
   }
   
   #header h1 {
-    font-size: 1.25rem !important;
+    font-size: 1.125rem !important;
   }
   
   #header .flex {
-    flex-wrap: nowrap;
-    gap: 0.5rem;
+    flex-wrap: wrap;
+    gap: 0.25rem;
   }
   
   #header select {
     font-size: 0.75rem;
-    padding: 0.25rem 0.5rem;
+    padding: 0.375rem 0.75rem;
+    min-width: 60px;
   }
   
   #header button {
-    font-size: 0.75rem;
-    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    padding: 0.375rem 0.5rem;
+    min-width: 36px;
+    min-height: 36px;
+  }
+  
+  /* Make GitHub button smaller on mobile */
+  #header a[href*="github"] {
+    padding: 0.375rem;
+    min-width: 36px;
+  }
+  
+  /* Hide Baryon-ai text on very small screens */
+  @media (max-width: 400px) {
+    #header .hidden.lg\:inline {
+      display: none !important;
+    }
   }
   
   /* Mobile input area */
@@ -339,6 +355,23 @@ code:not([class*="language-"]) {
   /* Mobile page indicator */
   #page-indicator {
     bottom: 100px !important;
+  }
+  
+  /* Mobile code blocks */
+  pre[class*="language-"] {
+    font-size: 0.8125rem !important;
+    padding: 0.75rem !important;
+    margin: 0.75rem 0 !important;
+    border-radius: 6px !important;
+  }
+  
+  code[class*="language-"] {
+    font-size: inherit !important;
+  }
+  
+  code:not([class*="language-"]) {
+    font-size: 0.8125em !important;
+    padding: 0.125rem 0.25rem !important;
   }
 }
 
