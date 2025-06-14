@@ -20,6 +20,7 @@ Alpine.store('app', {
   navPosition: 'left',
   isFullscreen: false,
   isLoading: false,
+  isSlideTransitioning: false,
   markdownInput: '',
   githubUrl: '',
 
@@ -74,21 +75,51 @@ Alpine.store('app', {
   },
 
   showSlide(index) {
-    if (index >= 0 && index < this.slides.length) {
+    if (this.isSlideTransitioning) return // 전환 중이면 무시
+    if (index >= 0 && index < this.slides.length && index !== this.currentSlide) {
+      this.isSlideTransitioning = true
       this.currentSlide = index
       this.slideManager.showSlide(index)
+      
+      // 짧은 딜레이 후 전환 완료 처리
+      setTimeout(() => {
+        this.isSlideTransitioning = false
+      }, 100)
     }
   },
 
   nextSlide() {
+    if (this.isSlideTransitioning) return // 전환 중이면 무시
     if (this.currentSlide < this.slides.length - 1) {
       this.showSlide(this.currentSlide + 1)
     }
   },
 
   previousSlide() {
+    if (this.isSlideTransitioning) return // 전환 중이면 무시
     if (this.currentSlide > 0) {
       this.showSlide(this.currentSlide - 1)
+    }
+  },
+
+  scrollSlideContent(amount) {
+    const slideViewer = document.getElementById('slide-viewer')
+    if (!slideViewer) return
+
+    // 현재 슬라이드의 스크롤 가능한 영역 찾기
+    const scrollableArea = slideViewer.querySelector('.prose') || 
+                          slideViewer.querySelector('.overflow-y-auto') ||
+                          slideViewer
+
+    if (scrollableArea) {
+      const currentScrollTop = scrollableArea.scrollTop
+      const newScrollTop = Math.max(0, currentScrollTop + amount)
+      
+      // 부드러운 스크롤
+      scrollableArea.scrollTo({
+        top: newScrollTop,
+        behavior: 'smooth'
+      })
     }
   },
 
@@ -165,22 +196,34 @@ Alpine.store('app', {
 
   // Keyboard Shortcuts
   setupKeyboardShortcuts() {
+    let keyPressed = new Set() // 현재 눌린 키들을 추적
+    
     document.addEventListener('keydown', (e) => {
       if (this.slides.length === 0) return
       
       // Don't trigger when typing in input fields
       if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') return
       
+      // 이미 눌린 키면 무시 (연속 입력 방지)
+      if (keyPressed.has(e.key)) return
+      keyPressed.add(e.key)
+      
       switch (e.key) {
         case 'ArrowLeft':
-        case 'ArrowUp':
           e.preventDefault()
           this.previousSlide()
           break
         case 'ArrowRight':
-        case 'ArrowDown':
           e.preventDefault()
           this.nextSlide()
+          break
+        case 'ArrowUp':
+          e.preventDefault()
+          this.scrollSlideContent(-100) // 위로 스크롤
+          break
+        case 'ArrowDown':
+          e.preventDefault()
+          this.scrollSlideContent(100) // 아래로 스크롤
           break
         case 'Escape':
           if (this.isFullscreen) {
@@ -188,6 +231,16 @@ Alpine.store('app', {
           }
           break
       }
+    })
+    
+    // 키를 뗄 때 추적에서 제거
+    document.addEventListener('keyup', (e) => {
+      keyPressed.delete(e.key)
+    })
+    
+    // 포커스를 잃었을 때 키 추적 초기화
+    document.addEventListener('blur', () => {
+      keyPressed.clear()
     })
   },
 

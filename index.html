@@ -209,22 +209,25 @@
 
     <!-- Controls -->
     <div 
-        class="fixed bottom-6 right-6 bg-brand-600 text-white px-4 py-2 rounded-full font-semibold text-sm shadow-lg z-50 hidden"
+        class="fixed bottom-6 right-6 bg-brand-600 text-white px-4 py-2 rounded-full font-semibold text-sm shadow-lg z-50"
         id="page-indicator"
+        x-show="slides.length > 0"
+        x-text="(currentSlide + 1) + ' / ' + slides.length"
     ></div>
 
     <div 
-        class="fixed bottom-6 left-1/2 transform -translate-x-1/2 flex gap-2 z-50 hidden"
+        class="fixed bottom-6 left-1/2 transform -translate-x-1/2 flex gap-2 z-50"
         id="slide-controls"
+        x-show="slides.length > 0"
     >
         <button 
-            onclick="window._managers?.slideManager?.store.previousSlide()"
+            @click="previousSlide()"
             class="px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 text-sm shadow-lg transition-colors"
         >
             ← 이전
         </button>
         <button 
-            onclick="window._managers?.slideManager?.store.nextSlide()"
+            @click="nextSlide()"
             class="px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 text-sm shadow-lg transition-colors"
         >
             다음 →

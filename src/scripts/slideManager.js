@@ -138,12 +138,7 @@ export class SlideManager {
     
     navigation.appendChild(slidesContainer)
 
-    // Show controls
-    const pageIndicator = document.getElementById('page-indicator')
-    const slideControls = document.getElementById('slide-controls')
-    
-    if (pageIndicator) pageIndicator.classList.remove('hidden')
-    if (slideControls) slideControls.classList.remove('hidden')
+    // Controls are now managed by Alpine.js automatically
   }
 
   showSlide(index) {
@@ -190,11 +185,7 @@ export class SlideManager {
       </div>
     `
 
-    // Update page indicator
-    const pageIndicator = document.getElementById('page-indicator')
-    if (pageIndicator) {
-      pageIndicator.textContent = `${index + 1} / ${this.store.slides.length}`
-    }
+    // Page indicator is now managed by Alpine.js automatically
 
     // Update navigation active state
     this.updateNavigationActiveState(index)
@@ -355,11 +346,6 @@ export class SlideManager {
       `
     }
 
-    // Hide controls
-    const pageIndicator = document.getElementById('page-indicator')
-    const slideControls = document.getElementById('slide-controls')
-    
-    if (pageIndicator) pageIndicator.classList.add('hidden')
-    if (slideControls) slideControls.classList.add('hidden')
+    // Controls are now managed by Alpine.js automatically
   }
 } 
