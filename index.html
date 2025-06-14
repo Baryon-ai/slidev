@@ -74,6 +74,244 @@
             color: #666;
             text-transform: uppercase;
         }
+
+        /* ===== MARP THEME SYSTEM ===== */
+        
+        /* DEFAULT THEME - Clean & Modern */
+        .theme-default {
+            /* Already defined by Tailwind classes */
+        }
+
+        /* GAIA THEME - Dark & Elegant */
+        .theme-gaia {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%) !important;
+        }
+        .theme-gaia #header {
+            background: rgba(0, 0, 0, 0.3) !important;
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+        .theme-gaia #viewer-container {
+            background: rgba(255, 255, 255, 0.05) !important;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .theme-gaia #slide-viewer {
+            background: transparent !important;
+            color: #ffffff !important;
+        }
+        .theme-gaia #slide-navigation {
+            background: rgba(0, 0, 0, 0.3) !important;
+            color: #ffffff !important;
+        }
+        .theme-gaia .prose {
+            color: #e2e8f0 !important;
+        }
+        .theme-gaia .prose h1, .theme-gaia .prose h2, .theme-gaia .prose h3 {
+            color: #ffffff !important;
+        }
+        .theme-gaia .sticky {
+            background: rgba(0, 0, 0, 0.8) !important;
+            backdrop-filter: blur(10px);
+            color: #ffffff !important;
+        }
+
+        /* UNCOVER THEME - Minimal & Clean */
+        .theme-uncover {
+            background: #fafafa !important;
+        }
+        .theme-uncover #header {
+            background: rgba(255, 255, 255, 0.95) !important;
+            border-bottom: none !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        .theme-uncover #viewer-container {
+            background: #ffffff !important;
+            box-shadow: none !important;
+            border: 1px solid #e0e0e0;
+        }
+        .theme-uncover #slide-viewer {
+            background: #ffffff !important;
+        }
+        .theme-uncover #slide-navigation {
+            background: #f8f8f8 !important;
+            border-right: 1px solid #e0e0e0 !important;
+        }
+        .theme-uncover .prose {
+            font-family: 'Georgia', serif !important;
+            line-height: 1.8 !important;
+        }
+        .theme-uncover .prose h1 {
+            font-size: 2.5rem !important;
+            font-weight: 300 !important;
+            margin-bottom: 2rem !important;
+            color: #333 !important;
+        }
+        .theme-uncover .prose h2 {
+            font-size: 1.8rem !important;
+            font-weight: 400 !important;
+            color: #555 !important;
+        }
+
+        /* ACADEMIC THEME - Scholarly */
+        .theme-academic {
+            background: #f9f9f9 !important;
+        }
+        .theme-academic #header {
+            background: #2c3e50 !important;
+            color: white !important;
+        }
+        .theme-academic #header h1 {
+            color: white !important;
+        }
+        .theme-academic #header label {
+            color: #ecf0f1 !important;
+        }
+        .theme-academic #viewer-container {
+            background: #ffffff !important;
+            border: 2px solid #34495e;
+            border-radius: 0 !important;
+        }
+        .theme-academic #slide-viewer {
+            background: #ffffff !important;
+        }
+        .theme-academic #slide-navigation {
+            background: #ecf0f1 !important;
+            border-right: 2px solid #34495e !important;
+        }
+        .theme-academic .prose {
+            font-family: 'Times New Roman', serif !important;
+            color: #2c3e50 !important;
+            line-height: 1.7 !important;
+        }
+        .theme-academic .prose h1 {
+            font-size: 2.2rem !important;
+            text-align: center !important;
+            border-bottom: 2px solid #34495e !important;
+            padding-bottom: 1rem !important;
+            margin-bottom: 2rem !important;
+            color: #2c3e50 !important;
+        }
+        .theme-academic .prose h2 {
+            font-size: 1.5rem !important;
+            color: #34495e !important;
+            margin-top: 2rem !important;
+        }
+        .theme-academic .prose blockquote {
+            border-left: 4px solid #34495e !important;
+            background: #f8f9fa !important;
+            padding: 1rem !important;
+            font-style: italic !important;
+        }
+
+        /* BUSINESS THEME - Professional */
+        .theme-business {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        }
+        .theme-business #header {
+            background: rgba(255, 255, 255, 0.1) !important;
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+        }
+        .theme-business #viewer-container {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(10px);
+        }
+        .theme-business #slide-viewer {
+            background: #ffffff !important;
+        }
+        .theme-business #slide-navigation {
+            background: rgba(255, 255, 255, 0.9) !important;
+            backdrop-filter: blur(5px);
+        }
+        .theme-business .prose {
+            font-family: 'Inter', sans-serif !important;
+            color: #1a202c !important;
+        }
+        .theme-business .prose h1 {
+            font-size: 2.5rem !important;
+            font-weight: 700 !important;
+            background: linear-gradient(135deg, #667eea, #764ba2) !important;
+            -webkit-background-clip: text !important;
+            background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            text-align: center !important;
+            margin-bottom: 2rem !important;
+        }
+        .theme-business .prose h2 {
+            color: #4a5568 !important;
+            font-weight: 600 !important;
+            border-left: 4px solid #667eea !important;
+            padding-left: 1rem !important;
+        }
+
+        /* NATURE THEME - Organic & Fresh */
+        .theme-nature {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%) !important;
+        }
+        .theme-nature #header {
+            background: rgba(255, 255, 255, 0.2) !important;
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3) !important;
+        }
+        .theme-nature #viewer-container {
+            background: rgba(255, 255, 255, 0.9) !important;
+            backdrop-filter: blur(10px);
+        }
+        .theme-nature #slide-viewer {
+            background: #fefefe !important;
+        }
+        .theme-nature #slide-navigation {
+            background: rgba(255, 255, 255, 0.7) !important;
+            backdrop-filter: blur(5px);
+        }
+        .theme-nature .prose {
+            color: #2d3748 !important;
+        }
+        .theme-nature .prose h1 {
+            font-size: 2.3rem !important;
+            color: #2f855a !important;
+            text-align: center !important;
+            margin-bottom: 2rem !important;
+        }
+        .theme-nature .prose h2 {
+            color: #38a169 !important;
+            font-weight: 600 !important;
+        }
+        .theme-nature .prose code {
+            background: rgba(72, 187, 120, 0.1) !important;
+            color: #2f855a !important;
+        }
+
+        /* Theme-specific navigation styles */
+        .theme-gaia #slide-navigation > div:hover {
+            background: rgba(255, 255, 255, 0.1) !important;
+        }
+        .theme-gaia #slide-navigation > div.bg-brand-50 {
+            background: rgba(255, 255, 255, 0.2) !important;
+            border-right: 4px solid #60a5fa !important;
+        }
+
+        .theme-academic #slide-navigation > div:hover {
+            background: #d5dbdb !important;
+        }
+        .theme-academic #slide-navigation > div.bg-brand-50 {
+            background: #34495e !important;
+            color: white !important;
+        }
+
+        /* Responsive adjustments for themes */
+        @media (max-width: 768px) {
+            .theme-academic .prose h1 {
+                font-size: 1.8rem !important;
+            }
+            .theme-business .prose h1 {
+                font-size: 2rem !important;
+            }
+            .theme-uncover .prose h1 {
+                font-size: 2rem !important;
+            }
+        }
     </style>
 </head>
 <body class="h-full bg-gradient-to-br from-slate-50 to-blue-50 font-sans text-gray-900 transition-all duration-300">
@@ -111,10 +349,12 @@
                     <div class="flex items-center gap-2">
                         <label class="text-sm font-medium text-gray-700">🎨 테마:</label>
                         <select id="theme-selector" onchange="changeTheme(this.value)" class="rounded-md border-gray-300 text-sm focus:border-brand-500 focus:ring-brand-500">
-                            <option value="default">기본</option>
-                            <option value="dark">다크</option>
-                            <option value="light">라이트</option>
-                            <option value="nature">자연</option>
+                            <option value="default">📋 Default</option>
+                            <option value="gaia">🌙 Gaia</option>
+                            <option value="uncover">📰 Uncover</option>
+                            <option value="academic">🎓 Academic</option>
+                            <option value="business">💼 Business</option>
+                            <option value="nature">🌿 Nature</option>
                         </select>
                     </div>
 
@@ -770,8 +1010,9 @@ function hello() {
         }
 
         function loadSample() {
-            const sampleMarkdown = `# 소개
-## 안녕하세요!
+            const sampleMarkdown = `# 🎯 Marp Vertical 소개
+## 세로 스크롤 프레젠테이션 뷰어
+
 이것은 **Marp Vertical** 프레젠테이션 뷰어입니다.
 
 ### 주요 특징
@@ -781,6 +1022,7 @@ function hello() {
 - 마크다운 문법 지원
 - **수학 수식 지원** 🧮
 - **코드 문법 강조** 💻
+- **🆕 Marp 테마 시스템**: 6가지 완전히 다른 디자인
 - **🆕 연속 슬라이드**: H1 없이 H2만 있으면 이전 제목 유지
 
 긴 내용이 있어도 스크롤로 모든 내용을 볼 수 있습니다.
@@ -805,7 +1047,54 @@ console.log(factorial(5)); // 120
 
 ---
 
-# 수학과 과학
+# 🎨 Marp 테마 시스템
+## 6가지 완전히 다른 디자인
+
+상단의 **🎨 테마** 드롭다운에서 다양한 테마를 체험해보세요!
+
+### 📋 Default Theme
+- 깔끔하고 모던한 디자인
+- Tailwind CSS 기반
+- 밝은 배경에 어두운 텍스트
+- **현재 적용된 테마입니다**
+
+### 🌙 Gaia Theme  
+- 어두운 배경의 우아한 디자인
+- 백드롭 블러 효과
+- 밝은 텍스트로 가독성 향상
+- 프레젠테이션에 최적화
+
+### 📰 Uncover Theme
+- 미니멀하고 깔끔한 스타일
+- Georgia 세리프 폰트
+- 신문/잡지 스타일 레이아웃
+- 텍스트 중심 콘텐츠에 적합
+
+---
+
+## Academic & Business 테마
+
+### 🎓 Academic Theme
+- 학술 논문 스타일
+- Times New Roman 폰트
+- 정형화된 레이아웃
+- 연구 발표에 적합
+
+### 💼 Business Theme  
+- 전문적인 비즈니스 스타일
+- 그라디언트 제목 효과
+- 깔끔한 Inter 폰트
+- 기업 프레젠테이션에 최적
+
+### 🌿 Nature Theme
+- 자연스럽고 친근한 색상
+- 녹색 계열 강조색
+- 부드러운 그라디언트 배경
+- 환경/교육 주제에 적합
+
+---
+
+# 수학과 과학 
 ## 물리학 공식들
 
 ### 운동 방정식
@@ -845,7 +1134,7 @@ print(f"위치에너지: {pe} J")
 
 ---
 
-# 코딩 예제
+# 프로그래밍 예제
 ## 다양한 언어 지원
 
 ### JavaScript
@@ -888,34 +1177,188 @@ $$(x + y)^n = \\sum_{k=0}^{n} \\binom{n}{k} x^{n-k} y^k$$
 
 ---
 
-# 마무리
-## 감사합니다!
+# 테마별 추천 사용법
+## 목적에 맞는 테마 선택
 
-### 🆕 새로운 기능들
-✅ **수학 수식**: $\\LaTeX$ 문법으로 아름다운 수식  
-✅ **코드 강조**: 다양한 프로그래밍 언어 지원  
-✅ **테이블 지원**: 데이터를 깔끔하게 정리  
-✅ **GitHub 연동**: URL만 입력하면 자동 로드  
-✅ **테마 변경**: 4가지 테마 지원  
-✅ **풀스크린**: 프레젠테이션 집중 모드  
-✅ **레이아웃**: 목차 위치 자유자재로  
-✅ **🆕 연속 슬라이드**: H1 없이 H2만 있으면 이전 H1 제목 유지
+### 📋 **Default** - 일반적인 모든 용도
+- 개발자 문서
+- 일반 프레젠테이션
+- 튜토리얼
 
-### 🚀 사용법
-1. **직접 입력**: 마크다운을 입력하고 "프레젠테이션 생성"
-2. **GitHub 로드**: "📁 GitHub 로드" → URL 입력 → 자동 풀스크린
-3. **테마 변경**: 🎨 테마 드롭다운에서 선택
+### 🌙 **Gaia** - 몰입형 프레젠테이션
+- 컨퍼런스 발표
+- 제품 런칭
+- 창의적 프레젠테이션
+
+### 📰 **Uncover** - 텍스트 중심 콘텐츠  
+- 블로그 포스트
+- 뉴스레터
+- 에세이
+
+### 🎓 **Academic** - 학술/연구 발표
+- 논문 발표
+- 학회 프레젠테이션  
+- 연구 보고서
+
+### 💼 **Business** - 기업 프레젠테이션
+- 투자 피칭
+- 분기별 보고
+- 마케팅 자료
+
+### 🌿 **Nature** - 친환경/교육 주제
+- 환경 프레젠테이션
+- 교육 자료
+- 워크샵
+
+---
+
+# 🚀 완성된 기능들
+## 모든 기능이 테마와 호환됩니다
+
+### ✅ **핵심 기능**
+- **6가지 Marp 테마**: 완전히 다른 디자인
+- **수학 수식**: $\\LaTeX$ 문법으로 아름다운 수식  
+- **코드 강조**: 다양한 프로그래밍 언어 지원  
+- **테이블 지원**: 데이터를 깔끔하게 정리  
+- **GitHub 연동**: URL만 입력하면 자동 로드  
+- **풀스크린**: 테마별 최적화된 프레젠테이션 모드
+- **레이아웃**: 목차 위치 자유자재로  
+- **연속 슬라이드**: H1 없이 H2만 있으면 이전 H1 제목 유지
+
+### 🎯 **사용법**
+1. **테마 선택**: 🎨 테마 드롭다운에서 원하는 스타일 선택
+2. **직접 입력**: 마크다운을 입력하고 "프레젠테이션 생성"
+3. **GitHub 로드**: "📁 GitHub 로드" → URL 입력 → 자동 풀스크린
 4. **레이아웃**: 📍 목차 위치를 왼쪽/오른쪽 선택
 5. **풀스크린**: 🖥️ 풀스크린으로 프레젠테이션 집중
 6. **ESC 키**: 풀스크린 모드 해제
 
-### 💡 지원 문법
+### 💡 **지원 문법**
 - 수학 수식: \$...\$ (인라인), \$\$...\$\$ (블록)
 - 코드: \\\`\\\`\\\`언어이름 으로 시작  
 - 테이블: | 헤더1 | 헤더2 | 형식
 - MARP 형식도 완벽 지원!
 
-**즐거운 프레젠테이션 되세요!** 🎉
+**🎨 다양한 테마로 멋진 프레젠테이션을 만들어보세요!** 🎉
+
+---
+
+# 데이터 테이블
+## 테마별 특징 비교
+
+| 테마 | 배경 | 폰트 | 용도 | 특징 |
+|------|------|------|------|------|
+| 📋 Default | 밝은 그라디언트 | Inter | 일반 | 모던하고 깔끔 |
+| 🌙 Gaia | 어두운 그라디언트 | Inter | 프레젠테이션 | 백드롭 블러 |
+| 📰 Uncover | 최소한의 흰색 | Georgia | 텍스트 | 미니멀 디자인 |
+| 🎓 Academic | 학술적 회색 | Times | 연구 | 정형화된 구조 |
+| 💼 Business | 비즈니스 블루 | Inter | 기업 | 전문적 느낌 |
+| 🌿 Nature | 자연 그라디언트 | Inter | 교육 | 친환경적 색상 |
+
+### 성능 비교
+| 기능 | 지원 여부 | 모든 테마 호환 | 비고 |
+|------|-----------|----------------|------|
+| 수학 수식 | ✅ | ✅ | LaTeX 문법 |
+| 코드 강조 | ✅ | ✅ | 다양한 언어 |
+| 테이블 | ✅ | ✅ | **새로 추가!** |
+| GitHub 연동 | ✅ | ✅ | URL만 입력 |
+| 풀스크린 | ✅ | ✅ | 테마별 최적화 |
+| 반응형 | ✅ | ✅ | 모바일 지원 |
+
+---
+
+# 머신러닝 기초
+## 개요와 소개
+
+머신러닝은 컴퓨터가 데이터로부터 학습하는 기술입니다.
+
+### 주요 개념
+- **지도학습**: 정답이 있는 데이터로 학습
+- **비지도학습**: 정답 없이 패턴 발견  
+- **강화학습**: 보상을 통한 학습
+
+\`\`\`python
+# 간단한 선형 회귀 예제
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+X = np.array([[1], [2], [3], [4], [5]])
+y = np.array([2, 4, 6, 8, 10])
+
+model = LinearRegression().fit(X, y)
+prediction = model.predict([[6]])
+print(f"예측값: {prediction[0]}")  # 12
+\`\`\`
+
+---
+
+## 지도학습 세부 내용
+> 이 슬라이드는 H1이 없고 H2만 있습니다!
+> 헤더에 "📂 머신러닝 기초 > 지도학습 세부 내용" 형태로 표시됩니다.
+
+### 분류 (Classification)
+데이터를 카테고리로 나누는 작업입니다.
+
+**주요 알고리즘**:
+- 로지스틱 회귀: $P(y=1|x) = \\frac{1}{1 + e^{-(\\beta_0 + \\beta_1 x)}}$
+- SVM: 결정 경계를 최적화
+- 랜덤 포레스트: 여러 결정 트리의 앙상블
+
+### 회귀 (Regression)  
+연속적인 수치를 예측하는 작업입니다.
+
+| 알고리즘 | 수식 | 특징 |
+|----------|------|------|
+| 선형 회귀 | $y = \\beta_0 + \\beta_1 x + \\epsilon$ | 단순하고 해석 가능 |
+| 다항 회귀 | $y = \\beta_0 + \\beta_1 x + \\beta_2 x^2 + \\epsilon$ | 비선형 관계 모델링 |
+| 리지 회귀 | $\\min ||y - X\\beta||^2 + \\lambda||\\beta||^2$ | 과적합 방지 |
+
+---
+
+## 비지도학습과 강화학습
+> 이 슬라이드도 연속 슬라이드입니다!
+> "📂 머신러닝 기초 > 비지도학습과 강화학습"으로 표시됩니다.
+
+### 클러스터링
+비슷한 데이터끼리 그룹화하는 기법입니다.
+
+**K-Means 알고리즘**:
+1. k개의 중심점 랜덤 초기화
+2. 각 점을 가장 가까운 중심점에 할당
+3. 중심점을 클러스터 내 점들의 평균으로 업데이트
+4. 수렴할 때까지 2-3 반복
+
+목적 함수: $J = \\sum_{i=1}^{k} \\sum_{x \\in C_i} ||x - \\mu_i||^2$
+
+### 강화학습
+환경과 상호작용하며 보상을 최대화하는 학습입니다.
+
+\`\`\`python
+# Q-Learning 의사코드
+def q_learning(env, episodes=1000, alpha=0.1, gamma=0.9, epsilon=0.1):
+    Q = initialize_q_table()
+    
+    for episode in range(episodes):
+        state = env.reset()
+        done = False
+        
+        while not done:
+            if random.random() < epsilon:
+                action = env.action_space.sample()  # 탐험
+            else:
+                action = np.argmax(Q[state])  # 활용
+                
+            next_state, reward, done = env.step(action)
+            
+            # Q-value 업데이트
+            Q[state][action] += alpha * (
+                reward + gamma * np.max(Q[next_state]) - Q[state][action]
+            )
+            
+            state = next_state
+    
+    return Q
+\`\`\`
 
 ---
 
@@ -985,7 +1428,7 @@ print(f"예측값: {prediction[0]}")  # 12
 ### 차원 축소
 고차원 데이터를 저차원으로 변환합니다.
 
-\`\`\`python
+**Python 코드:**
 # PCA 예제
 from sklearn.decomposition import PCA
 import numpy as np
@@ -997,135 +1440,37 @@ X = np.random.rand(100, 10)
 pca = PCA(n_components=2)
 X_reduced = pca.fit_transform(X)
 
-print(f"원본 차원: {X.shape}")
-print(f"축소 차원: {X_reduced.shape}")
-print(f"설명 분산비: {pca.explained_variance_ratio_}")
-\`\`\`
+print("원본 차원:", X.shape)
+print("축소 차원:", X_reduced.shape)
+print("설명 분산비:", pca.explained_variance_ratio_)
 
 ---
 
-## 딥러닝 기초
-> 새로운 H1이 시작되므로 이전 연결성이 끊어집니다.
+# 🎉 테마 체험 완료!
+## 지금 바로 다른 테마를 체험해보세요
 
-딥러닝은 인공 신경망을 여러 층으로 쌓은 구조입니다.
+### 🎨 상단 테마 드롭다운을 클릭하여 6가지 테마를 체험하세요:
 
-### 퍼셉트론
-가장 기본적인 신경망 단위입니다.
+1. **📋 Default** - 현재 보고 계신 깔끔한 모던 테마
+2. **🌙 Gaia** - 어두운 배경의 우아한 프레젠테이션 테마  
+3. **📰 Uncover** - 미니멀한 신문/잡지 스타일
+4. **🎓 Academic** - 학술 논문 스타일의 정형화된 테마
+5. **💼 Business** - 전문적인 비즈니스 프레젠테이션 테마
+6. **🌿 Nature** - 자연스럽고 친근한 친환경 테마
 
-활성화 함수: $y = f(\\sum_{i=1}^n w_i x_i + b)$
+### 💡 팁
+- 각 테마는 완전히 다른 디자인과 폰트를 사용합니다
+- 풀스크린 모드에서 테마별 차이가 더욱 선명합니다
+- 연속 슬라이드 기능으로 H1 없이 H2만 있어도 자연스럽게 연결됩니다
 
-**주요 활성화 함수들**:
-- 시그모이드: $\\sigma(x) = \\frac{1}{1 + e^{-x}}$
-- ReLU: $f(x) = \\max(0, x)$  
-- 탄젠트: $\\tanh(x) = \\frac{e^x - e^{-x}}{e^x + e^{-x}}$
+### 🚀 다음 단계
+- GitHub 로드로 실제 마크다운 파일을 불러와보세요
+- 공식 데모로 TRAS NLP 슬라이드를 체험해보세요
+- 여러분만의 마크다운으로 멋진 프레젠테이션을 만들어보세요!
 
----
-
-## CNN 구조 상세
-> H1이 없으므로 "📂 딥러닝 기초 > CNN 구조 상세"로 표시됩니다.
-
-합성곱 신경망은 이미지 처리에 특화된 구조입니다.
-
-### 합성곱 연산
-2D 합성곱 수식:
-$$Y[i,j] = \\sum_{m=0}^{M-1} \\sum_{n=0}^{N-1} X[i+m, j+n] \\cdot K[m,n]$$
-
-### 주요 레이어들
-- **Conv2D**: 특징 맵 생성
-- **MaxPool2D**: 공간 크기 축소
-- **Dropout**: 과적합 방지
-- **BatchNorm**: 학습 안정화
-
-\`\`\`python
-# PyTorch CNN 예제
-import torch.nn as nn
-
-class SimpleCNN(nn.Module):
-    def __init__(self, num_classes=10):
-        super(SimpleCNN, self).__init__()
-        self.features = nn.Sequential(
-            nn.Conv2d(3, 64, kernel_size=3, padding=1),
-            nn.ReLU(inplace=True),
-            nn.MaxPool2d(kernel_size=2, stride=2),
-            nn.Conv2d(64, 128, kernel_size=3, padding=1),
-            nn.ReLU(inplace=True),
-            nn.MaxPool2d(kernel_size=2, stride=2)
-        )
-        self.classifier = nn.Sequential(
-            nn.Dropout(),
-            nn.Linear(128 * 8 * 8, 512),
-            nn.ReLU(inplace=True),
-            nn.Linear(512, num_classes)
-        )
-    
-    def forward(self, x):
-        x = self.features(x)
-        x = x.view(x.size(0), -1)
-        x = self.classifier(x)
-        return x
-\`\`\`
+**Marp 테마 시스템으로 프레젠테이션의 새로운 경험을 시작하세요!**
 
 ---
-
-## RNN과 LSTM
-> 계속해서 "📂 딥러닝 기초 > RNN과 LSTM"으로 표시됩니다.
-
-순환 신경망은 시계열 데이터 처리에 적합합니다.
-
-### 기본 RNN의 한계
-- **기울기 소실**: 긴 시퀀스에서 정보 손실
-- **기울기 폭발**: 불안정한 학습
-
-### LSTM 해결책
-Long Short-Term Memory는 게이트 메커니즘을 사용합니다.
-
-**핵심 게이트들**:
-1. **Forget Gate**: $f_t = \\sigma(W_f \\cdot [h_{t-1}, x_t] + b_f)$
-2. **Input Gate**: $i_t = \\sigma(W_i \\cdot [h_{t-1}, x_t] + b_i)$
-3. **Output Gate**: $o_t = \\sigma(W_o \\cdot [h_{t-1}, x_t] + b_o)$
-
-**셀 상태 업데이트**:
-$$C_t = f_t * C_{t-1} + i_t * \\tilde{C_t}$$
-$$h_t = o_t * \\tanh(C_t)$$
-
-### 복잡한 수식 예제
-맥스웰 방정식:
-$$\\nabla \\cdot \\vec{E} = \\frac{\\rho}{\\epsilon_0}$$
-$$\\nabla \\cdot \\vec{B} = 0$$
-$$\\nabla \\times \\vec{E} = -\\frac{\\partial \\vec{B}}{\\partial t}$$
-$$\\nabla \\times \\vec{B} = \\mu_0\\vec{J} + \\mu_0\\epsilon_0\\frac{\\partial \\vec{E}}{\\partial t}$$
-
----
-
-# 데이터 테이블
-## 실험 결과 비교
-
-### 물리 실험 데이터
-| 실험 번호 | 질량 (kg) | 속도 (m/s) | 운동에너지 (J) | 측정 시간 |
-|-----------|-----------|------------|----------------|-----------|
-| 실험 1    | 2.5       | 10.0       | 125.0          | 09:30     |
-| 실험 2    | 3.0       | 8.5        | 108.4          | 10:15     |
-| 실험 3    | 2.0       | 12.0       | 144.0          | 11:00     |
-| 실험 4    | 4.0       | 6.0        | 72.0           | 14:30     |
-
-### 성능 비교표
-| 언어       | 실행 시간 (ms) | 메모리 사용량 (MB) | 성능 점수 |
-|------------|----------------|-------------------|-----------|
-| Python     | 1250           | 45.2              | ⭐⭐⭐       |
-| JavaScript | 890            | 38.7              | ⭐⭐⭐⭐      |
-| Java       | 650            | 125.3             | ⭐⭐⭐⭐⭐     |
-| C++        | 320            | 12.8              | ⭐⭐⭐⭐⭐     |
-
-### 기능 체크리스트
-| 기능               | 지원 여부 | 완성도 | 비고                    |
-|--------------------|-----------|--------|-------------------------|
-| 마크다운 파싱       | ✅         | 100%   | 기본 문법 모두 지원      |
-| 수학 수식          | ✅         | 100%   | LaTeX 문법 지원         |
-| 코드 문법 강조     | ✅         | 100%   | 다양한 언어 지원        |
-| **테이블 지원**    | ✅         | 100%   | **새로 추가된 기능!**   |
-| 이미지 삽입        | ❌         | 0%     | 향후 개발 예정          |
-
-> 📊 **테이블 기능이 추가되었습니다!** 이제 데이터를 깔끔하게 정리할 수 있어요.`;
 
             document.getElementById('markdown-input').value = sampleMarkdown;
             document.getElementById('editor-textarea').value = sampleMarkdown;
@@ -1202,45 +1547,94 @@ $$\\nabla \\times \\vec{B} = \\mu_0\\vec{J} + \\mu_0\\epsilon_0\\frac{\\partial 
             }
         });
 
-        // 테마 변경 함수
+        // 테마 변경 함수 - Marp 스타일 테마 시스템
         function changeTheme(theme) {
             currentTheme = theme;
             const body = document.body;
-            const slideViewer = document.getElementById('slide-viewer');
-            const slideNavigation = document.getElementById('slide-navigation');
             
-            // 기존 테마 클래스 제거
-            body.classList.remove('theme-dark', 'theme-light', 'theme-nature');
-            slideViewer.classList.remove('bg-dark-800', 'text-dark-100', 'bg-gray-100', 'bg-green-50');
-            slideNavigation.classList.remove('bg-dark-700', 'bg-gray-100', 'bg-green-50');
+            // 기존 모든 테마 클래스 제거
+            body.classList.remove(
+                'theme-default', 'theme-gaia', 'theme-uncover', 
+                'theme-academic', 'theme-business', 'theme-nature'
+            );
             
-            // 새 테마 적용
-            switch(theme) {
-                case 'dark':
-                    body.classList.add('theme-dark');
-                    slideViewer.classList.add('bg-dark-800', 'text-dark-100');
-                    slideNavigation.classList.add('bg-dark-700');
-                    break;
-                case 'light':
-                    body.classList.add('theme-light');
-                    slideViewer.classList.add('bg-gray-100');
-                    slideNavigation.classList.add('bg-gray-100');
-                    break;
-                case 'nature':
-                    body.classList.add('theme-nature');
-                    slideViewer.classList.add('bg-green-50');
-                    slideNavigation.classList.add('bg-green-50');
-                    break;
-                default:
-                    // 기본 테마는 별도 처리 없음
-                    break;
-            }
+            // 새 테마 클래스 적용
+            body.classList.add(`theme-${theme}`);
+            
+            // 테마에 따른 특별한 처리
+            const header = document.getElementById('header');
+            const container = document.getElementById('viewer-container');
             
             // 풀스크린 상태 유지
             if (isFullscreen) {
-                body.classList.add('bg-black');
-                body.classList.remove('bg-gradient-to-br', 'from-slate-50', 'to-blue-50');
+                header.classList.add('hidden');
+                container.classList.remove('m-4', 'rounded-xl', 'shadow-lg');
+                container.classList.add('h-screen', 'rounded-none');
             }
+            
+            // 테마별 특별한 설정
+            switch(theme) {
+                case 'gaia':
+                    // Gaia 테마는 어두운 배경이므로 텍스트 색상 조정
+                    updateTextColorsForDarkTheme();
+                    break;
+                case 'academic':
+                    // Academic 테마는 serif 폰트 사용
+                    updateFontsForAcademicTheme();
+                    break;
+                case 'uncover':
+                    // Uncover 테마는 미니멀한 스타일
+                    updateForMinimalTheme();
+                    break;
+                case 'business':
+                    // Business 테마는 프로페셔널한 스타일
+                    updateForBusinessTheme();
+                    break;
+                case 'nature':
+                    // Nature 테마는 자연스러운 색상
+                    updateForNatureTheme();
+                    break;
+                default:
+                    // Default 테마는 기본 스타일
+                    resetToDefaultTheme();
+                    break;
+            }
+            
+            console.log(`테마가 ${theme}으로 변경되었습니다.`);
+        }
+
+        // 테마별 보조 함수들
+        function updateTextColorsForDarkTheme() {
+            const elements = document.querySelectorAll('#header h1, #header label, #header button');
+            elements.forEach(el => {
+                if (!el.classList.contains('bg-gradient-to-r')) {
+                    el.style.color = '#ffffff';
+                }
+            });
+        }
+
+        function updateFontsForAcademicTheme() {
+            // Academic 테마에서는 Times 폰트 사용이 CSS에서 처리됨
+        }
+
+        function updateForMinimalTheme() {
+            // Uncover 테마의 미니멀한 스타일은 CSS에서 처리됨
+        }
+
+        function updateForBusinessTheme() {
+            // Business 테마의 프로페셔널한 스타일은 CSS에서 처리됨
+        }
+
+        function updateForNatureTheme() {
+            // Nature 테마의 자연스러운 색상은 CSS에서 처리됨
+        }
+
+        function resetToDefaultTheme() {
+            // 기본 테마로 리셋
+            const elements = document.querySelectorAll('#header h1, #header label, #header button');
+            elements.forEach(el => {
+                el.style.color = '';
+            });
         }
 
         // 네비게이션 위치 변경
@@ -1260,7 +1654,7 @@ $$\\nabla \\times \\vec{B} = \\mu_0\\vec{J} + \\mu_0\\epsilon_0\\frac{\\partial 
             }
         }
 
-        // 풀스크린 토글
+        // 풀스크린 토글 - 테마 시스템 호환
         function toggleFullscreen() {
             isFullscreen = !isFullscreen;
             const body = document.body;
@@ -1268,23 +1662,67 @@ $$\\nabla \\times \\vec{B} = \\mu_0\\vec{J} + \\mu_0\\epsilon_0\\frac{\\partial 
             const container = document.getElementById('viewer-container');
             
             if (isFullscreen) {
-                body.classList.add('bg-black');
-                body.classList.remove('bg-gradient-to-br', 'from-slate-50', 'to-blue-50');
+                // 풀스크린 진입
                 header.classList.add('hidden');
                 container.classList.remove('m-4', 'rounded-xl', 'shadow-lg');
                 container.classList.add('h-screen', 'rounded-none');
+                
+                // 테마별 풀스크린 스타일 적용
+                applyFullscreenThemeStyles();
+                
                 // 프레젠테이션 모드로 강제 전환
                 setLayout('presentation');
                 // ESC 키 리스너 추가
                 document.addEventListener('keydown', escapeFullscreen);
             } else {
-                body.classList.remove('bg-black');
-                body.classList.add('bg-gradient-to-br', 'from-slate-50', 'to-blue-50');
+                // 풀스크린 해제
                 header.classList.remove('hidden');
                 container.classList.add('m-4', 'rounded-xl', 'shadow-lg');
                 container.classList.remove('h-screen', 'rounded-none');
+                
+                // 원래 테마 스타일로 복원
+                restoreNormalThemeStyles();
+                
                 document.removeEventListener('keydown', escapeFullscreen);
             }
+        }
+
+        // 풀스크린 시 테마별 스타일 적용
+        function applyFullscreenThemeStyles() {
+            const body = document.body;
+            
+            // 현재 테마에 따른 풀스크린 배경 설정
+            switch(currentTheme) {
+                case 'gaia':
+                    // Gaia 테마는 이미 어두운 배경이므로 그대로 유지
+                    break;
+                case 'academic':
+                    body.style.background = '#2c3e50';
+                    break;
+                case 'uncover':
+                    body.style.background = '#fafafa';
+                    break;
+                case 'business':
+                    body.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+                    break;
+                case 'nature':
+                    body.style.background = 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)';
+                    break;
+                default:
+                    body.style.background = '#000000';
+                    break;
+            }
+        }
+
+        // 일반 모드 시 테마 스타일 복원
+        function restoreNormalThemeStyles() {
+            const body = document.body;
+            
+            // body의 인라인 스타일 제거하여 CSS 테마 클래스가 적용되도록 함
+            body.style.background = '';
+            
+            // 현재 테마 다시 적용
+            changeTheme(currentTheme);
         }
 
         function escapeFullscreen(e) {
