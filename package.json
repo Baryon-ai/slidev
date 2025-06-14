@@ -1,0 +1,51 @@
+{
+  "name": "marp-vertical-viewer",
+  "version": "1.0.0",
+  "description": "GitHub 마크다운을 아름다운 세로 스크롤 프레젠테이션으로 변환하는 웹 애플리케이션",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "serve": "npx http-server -p 8000",
+    "dev": "npx live-server --port=8000",
+    "build": "echo 'No build process needed for static HTML'",
+    "test": "echo 'No test specified'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/your-username/marp-vertical-viewer.git"
+  },
+  "keywords": [
+    "markdown",
+    "presentation",
+    "marp",
+    "slides",
+    "github",
+    "viewer",
+    "vertical-scroll",
+    "math",
+    "katex",
+    "code-highlighting",
+    "responsive",
+    "fullscreen"
+  ],
+  "author": "Your Name <your.email@example.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/your-username/marp-vertical-viewer/issues"
+  },
+  "homepage": "https://your-username.github.io/marp-vertical-viewer/",
+  "dependencies": {},
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "live-server": "^1.2.2"
+  },
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "files": [
+    "index.html",
+    "README.md",
+    "LICENSE",
+    "examples/"
+  ]
+} 

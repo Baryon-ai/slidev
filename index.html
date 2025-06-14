@@ -700,12 +700,15 @@
                 <button class="layout-btn toggle-btn" onclick="loadFromGitHub()">
                     📁 GitHub 로드
                 </button>
+                <button class="layout-btn" onclick="loadOfficialDemo()" style="background: linear-gradient(45deg, #e74c3c, #c0392b); font-weight: bold;">
+                    🎯 공식 데모
+                </button>
             </div>
         </div>
 
         <div class="input-area" id="input-area">
             <div class="input-group">
-                <label for="markdown-input">마크다운 입력 (--- 으로 슬라이드 구분, 수식/코드/테이블 지원)</label>
+                <label for="markdown-input">마크다운 입력 (--- 으로 슬라이드 구분, 수식/코드/테이블 지원) | 🎯 상단의 "공식 데모" 버튼으로 TRAS NLP 슬라이드 체험!</label>
                 <textarea id="markdown-input" placeholder="# 첫 번째 슬라이드
 ## 소제목
 내용을 여기에 작성하세요...
@@ -796,6 +799,17 @@ function hello() {
                     <div>
                         <h3>환영합니다!</h3>
                         <p>위의 텍스트 영역에 마크다운을 입력하고<br>"프레젠테이션 생성" 버튼을 클릭하세요.</p>
+                        
+                        <div style="margin: 1.5rem 0; padding: 1rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px;">
+                            <div style="color: white; text-align: center;">
+                                <strong>🎯 공식 데모 체험하기</strong><br>
+                                <small style="opacity: 0.9;">TRAS NLP 기초 슬라이드로 모든 기능을 확인해보세요!</small><br>
+                                <button onclick="loadOfficialDemo()" style="margin-top: 0.5rem; padding: 0.5rem 1rem; background: rgba(255,255,255,0.9); color: #333; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;">
+                                    📚 공식 데모 보기
+                                </button>
+                            </div>
+                        </div>
+                        
                         <p style="margin-top: 1rem; font-size: 0.9rem; color: #999;">
                             • --- 으로 슬라이드를 구분합니다<br>
                             • 긴 내용은 자동으로 스크롤됩니다<br>
@@ -827,9 +841,22 @@ function hello() {
             <h3>GitHub 마크다운 파일 로드</h3>
             <p>GitHub 저장소의 마크다운 파일 URL을 입력하세요:</p>
             <input type="text" id="github-url" placeholder="https://github.com/Baryon-ai/TRAS/blob/main/slides/section2_nlp_basics.md" style="width: 100%; padding: 0.5rem; margin: 1rem 0; border: 1px solid #ddd; border-radius: 4px;">
-            <div style="display: flex; gap: 1rem;">
-                <button onclick="loadGitHubFile()" style="flex: 1;">로드</button>
-                <button onclick="closeGitHubModal()" style="flex: 1; background: #ccc;">취소</button>
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <button onclick="loadGitHubFile()" style="flex: 1; min-width: 100px;">로드</button>
+                <button onclick="generateShareUrl()" style="flex: 1; min-width: 100px; background: #007bff;">공유 URL 생성</button>
+                <button onclick="closeGitHubModal()" style="flex: 1; min-width: 100px; background: #6c757d;">취소</button>
+            </div>
+            <div style="margin-top: 1rem; padding: 1rem; background: #f8f9fa; border-radius: 4px; font-size: 0.9rem;">
+                <div style="margin-bottom: 1rem;">
+                    <strong>🎯 빠른 시작:</strong><br>
+                    <button onclick="loadOfficialDemoInModal()" style="margin-top: 0.5rem; padding: 0.4rem 0.8rem; background: #28a745; color: white; border: none; border-radius: 4px; font-size: 0.8rem; cursor: pointer;">
+                        📚 공식 데모 URL 자동 입력
+                    </button>
+                </div>
+                <strong>💡 팁:</strong><br>
+                • URL 파라미터로 직접 접근 가능<br>
+                • 예시: <code>?url=깃허브주소</code><br>
+                • 공유 URL 생성으로 간편하게 공유하세요!
             </div>
         </div>
     </div>
@@ -1360,6 +1387,9 @@ $$\\nabla \\times \\vec{B} = \\mu_0\\vec{J} + \\mu_0\\epsilon_0\\frac{\\partial 
                 <div class="empty-state">
                     <div style="font-size: 2rem;">📋</div>
                     <div>마크다운을 입력하고<br>프레젠테이션을 생성하세요</div>
+                    <button onclick="loadOfficialDemo()" style="margin-top: 1rem; padding: 0.5rem 1rem; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">
+                        🎯 공식 데모 보기
+                    </button>
                 </div>
             `;
             
@@ -1521,9 +1551,96 @@ $$\\nabla \\times \\vec{B} = \\mu_0\\vec{J} + \\mu_0\\epsilon_0\\frac{\\partial 
             }
         }
 
-        // 초기 로드 시 샘플 표시
+        // URL 파라미터에서 GitHub URL 확인
+        function loadFromUrlParameter() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const githubUrl = urlParams.get('url') || urlParams.get('github') || urlParams.get('md');
+            
+            if (githubUrl) {
+                // URL 디코딩
+                const decodedUrl = decodeURIComponent(githubUrl);
+                
+                // GitHub URL 자동 로드
+                loadGitHubFileFromUrl(decodedUrl);
+                return true;
+            }
+            return false;
+        }
+
+        // URL에서 직접 GitHub 파일 로드
+        async function loadGitHubFileFromUrl(url) {
+            try {
+                const rawUrl = convertToRawUrl(url);
+                const response = await fetch(rawUrl);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const markdown = await response.text();
+                
+                // 마크다운 데이터를 텍스트 영역에 입력
+                document.getElementById('markdown-input').value = markdown;
+                document.getElementById('editor-textarea').value = markdown;
+                
+                // 자동으로 프레젠테이션 생성
+                parseMarkdown();
+                
+                // 풀스크린 모드로 전환
+                setTimeout(() => {
+                    if (!isFullscreen) {
+                        toggleFullscreen();
+                    }
+                }, 500);
+                
+            } catch (error) {
+                alert(`GitHub 파일 로드 실패: ${error.message}\n\n다시 시도하거나 수동으로 파일을 로드해주세요.`);
+                // 실패시 기본 샘플 로드
+                loadSample();
+            }
+        }
+
+        // 공유 URL 생성 함수
+        function generateShareUrl() {
+            const currentUrl = window.location.origin + window.location.pathname;
+            const githubUrl = document.getElementById('github-url').value.trim();
+            
+            if (githubUrl) {
+                const shareUrl = `${currentUrl}?url=${encodeURIComponent(githubUrl)}`;
+                
+                // 클립보드에 복사
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(shareUrl).then(() => {
+                        alert('공유 URL이 클립보드에 복사되었습니다!\n\n' + shareUrl);
+                    });
+                } else {
+                    // 클립보드 API가 지원되지 않는 경우
+                    prompt('공유 URL (Ctrl+C로 복사):', shareUrl);
+                }
+            }
+        }
+
+        // 공식 데모 로드
+        function loadOfficialDemo() {
+            const currentUrl = window.location.origin + window.location.pathname;
+            const officialDemoUrl = 'https://github.com/Baryon-ai/TRAS/blob/main/slides/section2_nlp_basics.md';
+            const demoUrl = `${currentUrl}?url=${encodeURIComponent(officialDemoUrl)}`;
+            
+            // 현재 페이지에서 데모 URL로 이동
+            window.location.href = demoUrl;
+        }
+
+        // 모달에서 공식 데모 URL 자동 입력
+        function loadOfficialDemoInModal() {
+            const officialDemoUrl = 'https://github.com/Baryon-ai/TRAS/blob/main/slides/section2_nlp_basics.md';
+            document.getElementById('github-url').value = officialDemoUrl;
+        }
+
+        // 초기 로드 시 URL 파라미터 확인 또는 샘플 표시
         window.addEventListener('load', function() {
-            loadSample();
+            if (!loadFromUrlParameter()) {
+                loadSample();
+            }
         });
     </script>
 </body>
