@@ -26,6 +26,44 @@
     <!-- Prism.js -->
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          "name": "Marp Vertical - 세로 스크롤 프레젠테이션 뷰어",
+          "description": "GitHub 마크다운을 아름다운 세로 스크롤 프레젠테이션으로 변환하는 모던 웹앱. 6가지 Marp 테마, 수식, 코드 강조, GitHub 연동, 반응형, 풀스크린 지원.",
+          "applicationCategory": "Presentation",
+          "operatingSystem": "All",
+          "url": "https://your-domain.com",
+          "image": "https://your-domain.com/og-image.png",
+          "author": {
+            "@type": "Organization",
+            "name": "Baryon-ai"
+          },
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "KRW"
+          }
+        }
+        </script>
+        
+    <script type="application/ld+json" id="dynamic-article-jsonld">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "Marp Vertical 프레젠테이션",
+      "description": "GitHub 마크다운을 세로 스크롤 프레젠테이션으로 변환",
+      "author": {
+        "@type": "Organization",
+        "name": "Baryon-ai"
+      },
+      "image": "https://your-domain.com/og-image.png",
+      "url": window.location.href,
+      "datePublished": "2024-06-12"
+    }
+    </script>
 </head>
 
 <body 
@@ -291,14 +329,12 @@
         const params = new URLSearchParams(window.location.search);
         const url = params.get('url');
         if (url) {
-          // 파일명 추출
-          let title = url.split('/').pop().replace(/\.md$/, '');
-          // 마크다운 첫 H1 추출 시도
+          let title = url.split('/').pop().replace(/\\.md$/, '');
           try {
             const resp = await fetch(url);
             if (resp.ok) {
               const text = await resp.text();
-              const h1 = text.match(/^#\s+(.+)$/m);
+              const h1 = text.match(/^#\\s+(.+)$/m);
               if (h1 && h1[1]) title = h1[1];
             }
           } catch(e) {}
@@ -314,6 +350,28 @@
           if (twt) twt.setAttribute('content', title + ' - Marp Vertical');
           const twd = document.querySelector('meta[name="twitter:description"]');
           if (twd) twd.setAttribute('content', title + ' | GitHub 마크다운 프레젠테이션 뷰어');
+          // Article JSON-LD 동적 변경
+          const articleJson = {
+            "@context": "https://schema.org",
+            "@type": "Article",
+            "headline": title + ' - Marp Vertical',
+            "description": title + ' | GitHub 마크다운 프레젠테이션 뷰어',
+            "author": {
+              "@type": "Organization",
+              "name": "Baryon-ai"
+            },
+            "image": "https://your-domain.com/og-image.png",
+            "url": window.location.href,
+            "datePublished": "2024-06-12"
+          };
+          let el = document.getElementById('dynamic-article-jsonld');
+          if (!el) {
+            el = document.createElement('script');
+            el.type = 'application/ld+json';
+            el.id = 'dynamic-article-jsonld';
+            document.head.appendChild(el);
+          }
+          el.textContent = JSON.stringify(articleJson, null, 2);
         }
       })();
     </script>
