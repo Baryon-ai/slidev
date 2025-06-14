@@ -5,318 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Marp Vertical - 세로 스크롤 프레젠테이션</title>
     
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'brand': {
-                            50: '#eff6ff',
-                            100: '#dbeafe',
-                            200: '#bfdbfe',
-                            300: '#93c5fd',
-                            400: '#60a5fa',
-                            500: '#3b82f6',
-                            600: '#2563eb',
-                            700: '#1d4ed8',
-                            800: '#1e40af',
-                            900: '#1e3a8a'
-                        },
-                        'dark': {
-                            50: '#f8fafc',
-                            100: '#f1f5f9',
-                            200: '#e2e8f0',
-                            300: '#cbd5e1',
-                            400: '#94a3b8',
-                            500: '#64748b',
-                            600: '#475569',
-                            700: '#334155',
-                            800: '#1e293b',
-                            900: '#0f172a'
-                        }
-                    },
-                    fontFamily: {
-                        'sans': ['Inter', 'ui-sans-serif', 'system-ui'],
-                        'mono': ['JetBrains Mono', 'ui-monospace', 'monospace']
-                    }
-                }
-            }
-        }
-    </script>
+    <!-- Styles -->
+    <link rel="stylesheet" href="/src/styles/main.css">
+    <link rel="stylesheet" href="/src/styles/themes.css">
     
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    
-    <!-- KaTeX for Math Rendering -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <!-- KaTeX -->
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
     
-    <!-- Highlight.js for Code Syntax Highlighting -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <style>
-        /* Custom styles for specific functionality */
-        .katex { font-size: 1.1em; }
-        .katex-display { margin: 1rem 0; overflow-x: auto; overflow-y: hidden; }
-        .code-language {
-            position: absolute;
-            top: 0.5rem;
-            right: 0.5rem;
-            background: rgba(0, 0, 0, 0.1);
-            padding: 0.2rem 0.5rem;
-            border-radius: 3px;
-            font-size: 0.7rem;
-            color: #666;
-            text-transform: uppercase;
-        }
-
-        /* ===== MARP THEME SYSTEM ===== */
-        
-        /* DEFAULT THEME - Clean & Modern */
-        .theme-default {
-            /* Already defined by Tailwind classes */
-        }
-
-        /* GAIA THEME - Dark & Elegant */
-        .theme-gaia {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%) !important;
-        }
-        .theme-gaia #header {
-            background: rgba(0, 0, 0, 0.3) !important;
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
-        }
-        .theme-gaia #viewer-container {
-            background: rgba(255, 255, 255, 0.05) !important;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .theme-gaia #slide-viewer {
-            background: transparent !important;
-            color: #ffffff !important;
-        }
-        .theme-gaia #slide-navigation {
-            background: rgba(0, 0, 0, 0.3) !important;
-            color: #ffffff !important;
-        }
-        .theme-gaia .prose {
-            color: #e2e8f0 !important;
-        }
-        .theme-gaia .prose h1, .theme-gaia .prose h2, .theme-gaia .prose h3 {
-            color: #ffffff !important;
-        }
-        .theme-gaia .sticky {
-            background: rgba(0, 0, 0, 0.8) !important;
-            backdrop-filter: blur(10px);
-            color: #ffffff !important;
-        }
-
-        /* UNCOVER THEME - Minimal & Clean */
-        .theme-uncover {
-            background: #fafafa !important;
-        }
-        .theme-uncover #header {
-            background: rgba(255, 255, 255, 0.95) !important;
-            border-bottom: none !important;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-        .theme-uncover #viewer-container {
-            background: #ffffff !important;
-            box-shadow: none !important;
-            border: 1px solid #e0e0e0;
-        }
-        .theme-uncover #slide-viewer {
-            background: #ffffff !important;
-        }
-        .theme-uncover #slide-navigation {
-            background: #f8f8f8 !important;
-            border-right: 1px solid #e0e0e0 !important;
-        }
-        .theme-uncover .prose {
-            font-family: 'Georgia', serif !important;
-            line-height: 1.8 !important;
-        }
-        .theme-uncover .prose h1 {
-            font-size: 2.5rem !important;
-            font-weight: 300 !important;
-            margin-bottom: 2rem !important;
-            color: #333 !important;
-        }
-        .theme-uncover .prose h2 {
-            font-size: 1.8rem !important;
-            font-weight: 400 !important;
-            color: #555 !important;
-        }
-
-        /* ACADEMIC THEME - Scholarly */
-        .theme-academic {
-            background: #f9f9f9 !important;
-        }
-        .theme-academic #header {
-            background: #2c3e50 !important;
-            color: white !important;
-        }
-        .theme-academic #header h1 {
-            color: white !important;
-        }
-        .theme-academic #header label {
-            color: #ecf0f1 !important;
-        }
-        .theme-academic #viewer-container {
-            background: #ffffff !important;
-            border: 2px solid #34495e;
-            border-radius: 0 !important;
-        }
-        .theme-academic #slide-viewer {
-            background: #ffffff !important;
-        }
-        .theme-academic #slide-navigation {
-            background: #ecf0f1 !important;
-            border-right: 2px solid #34495e !important;
-        }
-        .theme-academic .prose {
-            font-family: 'Times New Roman', serif !important;
-            color: #2c3e50 !important;
-            line-height: 1.7 !important;
-        }
-        .theme-academic .prose h1 {
-            font-size: 2.2rem !important;
-            text-align: center !important;
-            border-bottom: 2px solid #34495e !important;
-            padding-bottom: 1rem !important;
-            margin-bottom: 2rem !important;
-            color: #2c3e50 !important;
-        }
-        .theme-academic .prose h2 {
-            font-size: 1.5rem !important;
-            color: #34495e !important;
-            margin-top: 2rem !important;
-        }
-        .theme-academic .prose blockquote {
-            border-left: 4px solid #34495e !important;
-            background: #f8f9fa !important;
-            padding: 1rem !important;
-            font-style: italic !important;
-        }
-
-        /* BUSINESS THEME - Professional */
-        .theme-business {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-        }
-        .theme-business #header {
-            background: rgba(255, 255, 255, 0.1) !important;
-            backdrop-filter: blur(15px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
-        }
-        .theme-business #viewer-container {
-            background: rgba(255, 255, 255, 0.95) !important;
-            backdrop-filter: blur(10px);
-        }
-        .theme-business #slide-viewer {
-            background: #ffffff !important;
-        }
-        .theme-business #slide-navigation {
-            background: rgba(255, 255, 255, 0.9) !important;
-            backdrop-filter: blur(5px);
-        }
-        .theme-business .prose {
-            font-family: 'Inter', sans-serif !important;
-            color: #1a202c !important;
-        }
-        .theme-business .prose h1 {
-            font-size: 2.5rem !important;
-            font-weight: 700 !important;
-            background: linear-gradient(135deg, #667eea, #764ba2) !important;
-            -webkit-background-clip: text !important;
-            background-clip: text !important;
-            -webkit-text-fill-color: transparent !important;
-            text-align: center !important;
-            margin-bottom: 2rem !important;
-        }
-        .theme-business .prose h2 {
-            color: #4a5568 !important;
-            font-weight: 600 !important;
-            border-left: 4px solid #667eea !important;
-            padding-left: 1rem !important;
-        }
-
-        /* NATURE THEME - Organic & Fresh */
-        .theme-nature {
-            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%) !important;
-        }
-        .theme-nature #header {
-            background: rgba(255, 255, 255, 0.2) !important;
-            backdrop-filter: blur(15px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.3) !important;
-        }
-        .theme-nature #viewer-container {
-            background: rgba(255, 255, 255, 0.9) !important;
-            backdrop-filter: blur(10px);
-        }
-        .theme-nature #slide-viewer {
-            background: #fefefe !important;
-        }
-        .theme-nature #slide-navigation {
-            background: rgba(255, 255, 255, 0.7) !important;
-            backdrop-filter: blur(5px);
-        }
-        .theme-nature .prose {
-            color: #2d3748 !important;
-        }
-        .theme-nature .prose h1 {
-            font-size: 2.3rem !important;
-            color: #2f855a !important;
-            text-align: center !important;
-            margin-bottom: 2rem !important;
-        }
-        .theme-nature .prose h2 {
-            color: #38a169 !important;
-            font-weight: 600 !important;
-        }
-        .theme-nature .prose code {
-            background: rgba(72, 187, 120, 0.1) !important;
-            color: #2f855a !important;
-        }
-
-        /* Theme-specific navigation styles */
-        .theme-gaia #slide-navigation > div:hover {
-            background: rgba(255, 255, 255, 0.1) !important;
-        }
-        .theme-gaia #slide-navigation > div.bg-brand-50 {
-            background: rgba(255, 255, 255, 0.2) !important;
-            border-right: 4px solid #60a5fa !important;
-        }
-
-        .theme-academic #slide-navigation > div:hover {
-            background: #d5dbdb !important;
-        }
-        .theme-academic #slide-navigation > div.bg-brand-50 {
-            background: #34495e !important;
-            color: white !important;
-        }
-
-        /* Responsive adjustments for themes */
-        @media (max-width: 768px) {
-            .theme-academic .prose h1 {
-                font-size: 1.8rem !important;
-            }
-            .theme-business .prose h1 {
-                font-size: 2rem !important;
-            }
-            .theme-uncover .prose h1 {
-                font-size: 2rem !important;
-            }
-        }
-    </style>
+    <!-- Prism.js -->
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
 </head>
-<body class="h-full bg-gradient-to-br from-slate-50 to-blue-50 font-sans text-gray-900 transition-all duration-300">
+
+<body 
+    class="h-full bg-gradient-to-br from-slate-50 to-blue-50 font-sans text-gray-900 transition-all duration-300"
+    x-data="$store.app"
+    x-init="init()"
+>
     <!-- Header -->
-    <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-200 shadow-sm" id="header">
+    <header 
+        class="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-200 shadow-sm" 
+        id="header"
+        x-show="!isFullscreen"
+        x-transition
+    >
         <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Title -->
             <div class="text-center py-4">
@@ -328,27 +41,33 @@
 
             <!-- Controls -->
             <div class="pb-4">
-                <!-- Layout Controls -->
-                <div class="flex flex-wrap items-center justify-center gap-2 mb-4">
+                <div class="flex flex-wrap items-center justify-center gap-4">
+                    <!-- Layout Controls -->
                     <div class="inline-flex rounded-lg bg-gray-100 p-1">
-                        <button class="layout-btn px-3 py-2 text-sm font-medium rounded-md transition-all duration-200 text-gray-600 hover:text-gray-900" id="layout-presentation" onclick="setLayout('presentation')">
-                            🎭 프레젠테이션만
+                        <button 
+                            @click="setLayout('presentation')"
+                            :class="currentLayout === 'presentation' ? 'bg-brand-600 text-white' : 'text-gray-600 hover:text-gray-900'"
+                            class="px-3 py-2 text-sm font-medium rounded-md transition-all duration-200"
+                        >
+                            🎭 프레젠테이션
                         </button>
-                        <button class="layout-btn px-3 py-2 text-sm font-medium rounded-md transition-all duration-200 text-gray-600 hover:text-gray-900" id="layout-split" onclick="setLayout('split')">
+                        <button 
+                            @click="setLayout('split')"
+                            :class="currentLayout === 'split' ? 'bg-brand-600 text-white' : 'text-gray-600 hover:text-gray-900'"
+                            class="px-3 py-2 text-sm font-medium rounded-md transition-all duration-200"
+                        >
                             📊 분할 보기
                         </button>
-                        <button class="layout-btn px-3 py-2 text-sm font-medium rounded-md transition-all duration-200 text-gray-600 hover:text-gray-900" id="layout-editor" onclick="setLayout('editor')">
-                            📝 에디터만
-                        </button>
                     </div>
-                </div>
 
-                <!-- Options and Actions -->
-                <div class="flex flex-wrap items-center justify-center gap-4">
                     <!-- Theme Selector -->
                     <div class="flex items-center gap-2">
-                        <label class="text-sm font-medium text-gray-700">🎨 테마:</label>
-                        <select id="theme-selector" onchange="changeTheme(this.value)" class="rounded-md border-gray-300 text-sm focus:border-brand-500 focus:ring-brand-500">
+                        <label class="text-sm font-medium text-gray-700">🎨</label>
+                        <select 
+                            x-model="currentTheme" 
+                            @change="changeTheme($event.target.value)"
+                            class="rounded-md border-gray-300 text-sm focus:border-brand-500 focus:ring-brand-500"
+                        >
                             <option value="default">📋 Default</option>
                             <option value="gaia">🌙 Gaia</option>
                             <option value="uncover">📰 Uncover</option>
@@ -360,86 +79,82 @@
 
                     <!-- Navigation Position -->
                     <div class="flex items-center gap-2">
-                        <label class="text-sm font-medium text-gray-700">📍 목차:</label>
-                        <select id="nav-position" onchange="changeNavPosition(this.value)" class="rounded-md border-gray-300 text-sm focus:border-brand-500 focus:ring-brand-500">
+                        <label class="text-sm font-medium text-gray-700">📍</label>
+                        <select 
+                            x-model="navPosition"
+                            @change="changeNavPosition($event.target.value)"
+                            class="rounded-md border-gray-300 text-sm focus:border-brand-500 focus:ring-brand-500"
+                        >
                             <option value="left">왼쪽</option>
                             <option value="right">오른쪽</option>
                         </select>
                     </div>
 
                     <!-- Action Buttons -->
-                    <div class="flex flex-wrap gap-2">
-                        <button onclick="toggleInput()" class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 transition-colors">
-                            ⚙️ 입력창 토글
-                        </button>
-                        <button onclick="toggleFullscreen()" class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 transition-colors">
-                            🖥️ 풀스크린
-                        </button>
-                        <button onclick="loadFromGitHub()" class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 transition-colors">
-                            📁 GitHub 로드
-                        </button>
-                        <button onclick="loadOfficialDemo()" class="inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-red-500 to-red-600 rounded-md hover:from-red-600 hover:to-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all">
-                            🎯 공식 데모
-                        </button>
-                    </div>
+                    <button 
+                        @click="toggleInput()"
+                        class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                    >
+                        ⚙️ 입력창
+                    </button>
+                    
+                    <button 
+                        @click="toggleFullscreen()"
+                        class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                    >
+                        🖥️ 풀스크린
+                    </button>
+                    
+                    <button 
+                        @click="$dispatch('open-modal')"
+                        class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                    >
+                        📁 GitHub
+                    </button>
+                    
+                    <button 
+                        @click="loadOfficialDemo()"
+                        class="px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-red-500 to-red-600 rounded-md hover:from-red-600 hover:to-red-700 transition-all"
+                    >
+                        🎯 공식 데모
+                    </button>
                 </div>
             </div>
 
             <!-- Input Area -->
-            <div class="transition-all duration-300 overflow-hidden" id="input-area">
+            <div 
+                class="transition-all duration-300 overflow-hidden"
+                x-show="inputVisible"
+                x-transition
+            >
                 <div class="flex flex-col lg:flex-row gap-4 pb-4">
                     <div class="flex-1">
-                        <label for="markdown-input" class="block text-sm font-medium text-gray-700 mb-2">
-                            마크다운 입력 (--- 으로 슬라이드 구분, 수식/코드/테이블 지원) | 🎯 상단의 "공식 데모" 버튼으로 TRAS NLP 슬라이드 체험!
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            마크다운 입력 (--- 으로 슬라이드 구분)
                         </label>
                         <textarea 
-                            id="markdown-input" 
+                            x-model="markdownInput"
                             class="w-full h-32 px-3 py-2 text-sm font-mono border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent resize-y"
-                            placeholder="# 첫 번째 슬라이드
-## 소제목
-내용을 여기에 작성하세요...
-
-수학 수식: $E = mc^2$
-
-```javascript
-function hello() {
-    console.log('Hello, World!');
-}
-```
-
----
-
-# 두 번째 슬라이드
-## 수학과 코드가 지원됩니다!
-
-블록 수식:
-$$\int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}$$
-
-```python
-def factorial(n):
-    return 1 if n <= 1 else n * factorial(n-1)
-```
-
----
-
-# 세 번째 슬라이드
-## 테이블 예제
-
-| 항목 | 값 | 설명 |
-|------|----|----- |
-| 항목1 | 123 | 설명1 |
-| 항목2 | 456 | 설명2 |
-
-더 많은 내용..."></textarea>
+                            placeholder="# 첫 번째 슬라이드&#10;내용을 입력하세요...&#10;&#10;---&#10;&#10;# 두 번째 슬라이드&#10;더 많은 내용..."
+                        ></textarea>
                     </div>
                     <div class="flex flex-col gap-2 lg:w-48">
-                        <button onclick="parseMarkdown()" class="w-full px-4 py-2 text-sm font-semibold text-white bg-brand-600 rounded-lg hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 transition-colors">
-                            🚀 프레젠테이션 생성
+                        <button 
+                            @click="parseMarkdown(markdownInput)"
+                            class="w-full px-4 py-2 text-sm font-semibold text-white bg-brand-600 rounded-lg hover:bg-brand-700 transition-colors"
+                        >
+                            🚀 생성
                         </button>
-                        <button onclick="loadSample()" class="w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 transition-colors">
-                            📝 샘플 로드
+                        <button 
+                            @click="loadSample()"
+                            class="w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                        >
+                            📝 샘플
                         </button>
-                        <button onclick="clearAll()" class="w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 transition-colors">
+                        <button 
+                            @click="clearAll()"
+                            class="w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                        >
                             🗑️ 초기화
                         </button>
                     </div>
@@ -449,1440 +164,113 @@ def factorial(n):
     </header>
 
     <!-- Main Content -->
-    <main class="flex-1 flex bg-white m-4 rounded-xl shadow-lg overflow-hidden" id="viewer-container">
+    <main 
+        class="flex-1 flex bg-white rounded-xl shadow-lg overflow-hidden" 
+        id="viewer-container"
+        :class="isFullscreen ? 'h-screen rounded-none m-0' : 'm-4'"
+    >
         <!-- Editor Section -->
-        <div class="hidden flex-col bg-gray-50 border-r border-gray-200 w-1/2" id="editor-section">
+        <div 
+            class="flex-col bg-gray-50 border-r border-gray-200 w-1/2" 
+            x-show="currentLayout === 'split'"
+            x-transition
+        >
             <div class="bg-gray-100 px-4 py-3 border-b border-gray-200">
-                <h3 class="text-sm font-semibold text-gray-900 flex items-center">
-                    📝 마크다운 에디터
-                </h3>
+                <h3 class="text-sm font-semibold text-gray-900">📝 마크다운 에디터</h3>
             </div>
             <div class="flex-1 p-4">
                 <textarea 
-                    id="editor-textarea" 
-                    class="w-full h-full p-3 text-sm font-mono border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
-                    placeholder="# 첫 번째 슬라이드
-마크다운 내용을 여기에 입력하세요...
-
-수학 수식: $E = mc^2$
-
-```javascript
-function hello() {
-    console.log('Hello, World!');
-}
-```
-
-| 기능 | 지원 | 비고 |
-|------|------|------|
-| 수식 | ✅ | LaTeX |
-| 코드 | ✅ | 문법강조 |
-| 테이블 | ✅ | 새기능! |
-
----
-
-# 두 번째 슬라이드
-더 많은 내용..."></textarea>
+                    x-model="markdownInput"
+                    class="w-full h-full p-3 text-sm font-mono border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-brand-500"
+                ></textarea>
             </div>
         </div>
 
         <!-- Presentation Section -->
-        <div class="flex flex-1" id="presentation-section">
+        <div 
+            class="flex flex-1 presentation-section" 
+            :class="navPosition === 'right' ? 'flex-row-reverse' : ''"
+        >
             <!-- Slide Navigation -->
-            <div class="w-64 bg-gray-50 border-r border-gray-200 overflow-y-auto" id="slide-navigation">
-                <div class="flex flex-col items-center justify-center h-full text-center p-8">
-                    <div class="text-6xl mb-4">📋</div>
-                    <div class="text-gray-600">
-                        마크다운을 입력하고<br>프레젠테이션을 생성하세요
-                    </div>
-                </div>
+            <div 
+                class="w-64 bg-gray-50 overflow-y-auto border-r border-gray-200" 
+                id="slide-navigation"
+                :class="navPosition === 'right' ? 'border-l border-r-0' : ''"
+            >
+                <!-- Content will be populated by JavaScript -->
             </div>
 
             <!-- Slide Viewer -->
             <div class="flex-1 flex flex-col" id="slide-viewer">
-                <div class="flex flex-col items-center justify-center h-full text-center p-8">
-                    <div class="text-8xl mb-6">🎭</div>
-                    <div class="max-w-2xl">
-                        <h3 class="text-2xl font-bold text-gray-900 mb-4">환영합니다!</h3>
-                        <p class="text-gray-600 mb-6">
-                            위의 텍스트 영역에 마크다운을 입력하고<br>
-                            "프레젠테이션 생성" 버튼을 클릭하세요.
-                        </p>
-                        
-                        <div class="mb-6 p-6 bg-gradient-to-r from-brand-500 to-purple-600 rounded-xl text-white">
-                            <div class="text-center">
-                                <h4 class="text-lg font-bold mb-2">🎯 공식 데모 체험하기</h4>
-                                <p class="text-brand-100 text-sm mb-4">
-                                    TRAS NLP 기초 슬라이드로 모든 기능을 확인해보세요!
-                                </p>
-                                <button 
-                                    onclick="loadOfficialDemo()" 
-                                    class="px-4 py-2 bg-white/90 text-brand-700 font-semibold rounded-lg hover:bg-white transition-colors">
-                                    📚 공식 데모 보기
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div class="text-left text-sm text-gray-500 space-y-1">
-                            <p>• --- 으로 슬라이드를 구분합니다</p>
-                            <p>• 긴 내용은 자동으로 스크롤됩니다</p>
-                            <p>• 제목은 항상 상단에 고정됩니다</p>
-                            <p>• 수학 수식 지원: $...$, $$...$$</p>
-                            <p>• 코드 문법 강조: ```언어명</p>
-                            <p>• 테이블 지원: | 헤더 | 형식 |</p>
-                            <p>• 🆕 GitHub 로드: URL만 입력!</p>
-                            <p>• 🆕 4가지 테마 + 풀스크린 모드</p>
-                        </div>
-                    </div>
-                </div>
+                <!-- Content will be populated by JavaScript -->
             </div>
         </div>
     </main>
 
-    <!-- Page Indicator -->
-    <div class="fixed bottom-6 right-6 bg-brand-600 text-white px-4 py-2 rounded-full font-semibold text-sm shadow-lg z-50 hidden" id="page-indicator">
-        1 / 1
-    </div>
+    <!-- Controls -->
+    <div 
+        class="fixed bottom-6 right-6 bg-brand-600 text-white px-4 py-2 rounded-full font-semibold text-sm shadow-lg z-50 hidden"
+        id="page-indicator"
+    ></div>
 
-    <!-- Slide Controls -->
-    <div class="fixed bottom-6 left-1/2 transform -translate-x-1/2 flex gap-2 z-50 hidden" id="slide-controls">
-        <button onclick="previousSlide()" class="px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 font-medium text-sm shadow-lg transition-colors">
+    <div 
+        class="fixed bottom-6 left-1/2 transform -translate-x-1/2 flex gap-2 z-50 hidden"
+        id="slide-controls"
+    >
+        <button 
+            onclick="window._managers?.slideManager?.store.previousSlide()"
+            class="px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 text-sm shadow-lg transition-colors"
+        >
             ← 이전
         </button>
-        <button onclick="nextSlide()" class="px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 font-medium text-sm shadow-lg transition-colors">
+        <button 
+            onclick="window._managers?.slideManager?.store.nextSlide()"
+            class="px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 text-sm shadow-lg transition-colors"
+        >
             다음 →
         </button>
     </div>
 
-    <!-- GitHub URL Modal -->
-    <div id="github-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+    <!-- GitHub Modal -->
+    <div 
+        x-data="{ open: false }"
+        @open-modal.window="open = true"
+        @keydown.escape="open = false"
+        x-show="open"
+        class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
+        x-transition
+    >
+        <div 
+            @click.away="open = false"
+            class="bg-white rounded-xl shadow-2xl max-w-lg w-full"
+        >
             <div class="p-6">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-semibold text-gray-900">GitHub 마크다운 파일 로드</h3>
-                    <button onclick="closeGitHubModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
-                    </button>
-                </div>
-                
-                <p class="text-gray-600 mb-4">GitHub 저장소의 마크다운 파일 URL을 입력하세요:</p>
-                
+                <h3 class="text-lg font-semibold mb-4">GitHub 마크다운 로드</h3>
                 <input 
+                    x-model="githubUrl"
                     type="text" 
-                    id="github-url" 
-                    placeholder="https://github.com/Baryon-ai/TRAS/blob/main/slides/section2_nlp_basics.md"
-                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent text-sm mb-4">
-                
-                <div class="flex flex-wrap gap-2 mb-4">
-                    <button onclick="loadGitHubFile()" class="flex-1 min-w-[100px] px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 font-medium text-sm transition-colors">
+                    placeholder="https://github.com/user/repo/blob/main/file.md"
+                    class="w-full px-3 py-2 border rounded-lg mb-4"
+                >
+                <div class="flex gap-2">
+                    <button 
+                        @click="loadFromGitHub(githubUrl); open = false"
+                        class="flex-1 px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700"
+                    >
                         로드
                     </button>
-                    <button onclick="generateShareUrl()" class="flex-1 min-w-[100px] px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium text-sm transition-colors">
-                        공유 URL 생성
-                    </button>
-                    <button onclick="closeGitHubModal()" class="flex-1 min-w-[100px] px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 font-medium text-sm transition-colors">
+                    <button 
+                        @click="open = false"
+                        class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400"
+                    >
                         취소
                     </button>
-                </div>
-                
-                <div class="bg-gray-50 rounded-lg p-4 text-sm">
-                    <div class="mb-3">
-                        <h4 class="font-semibold text-gray-900 mb-2">🎯 빠른 시작:</h4>
-                        <button onclick="loadOfficialDemoInModal()" class="px-3 py-1.5 bg-green-600 text-white rounded-md hover:bg-green-700 font-medium text-xs transition-colors">
-                            📚 공식 데모 URL 자동 입력
-                        </button>
-                    </div>
-                    
-                    <div>
-                        <h4 class="font-semibold text-gray-900 mb-2">💡 팁:</h4>
-                        <ul class="text-gray-600 space-y-1 text-xs">
-                            <li>• URL 파라미터로 직접 접근 가능</li>
-                            <li>• 예시: <code class="bg-gray-200 px-1 rounded">?url=깃허브주소</code></li>
-                            <li>• 공유 URL 생성으로 간편하게 공유하세요!</li>
-                        </ul>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script>
-        let slides = [];
-        let currentSlide = 0;
-        let currentLayout = 'presentation';
-        let inputVisible = true;
-        let currentTheme = 'default';
-        let navPosition = 'left';
-        let isFullscreen = false;
-
-        function setLayout(layout) {
-            currentLayout = layout;
-            const container = document.getElementById('viewer-container');
-            const editorSection = document.getElementById('editor-section');
-            const presentationSection = document.getElementById('presentation-section');
-            
-            // 모든 레이아웃 버튼 비활성화
-            document.querySelectorAll('.layout-btn').forEach(btn => {
-                btn.classList.remove('bg-brand-600', 'text-white');
-                btn.classList.add('text-gray-600', 'hover:text-gray-900');
-            });
-            
-            // 현재 레이아웃 버튼 활성화
-            const activeBtn = document.getElementById(`layout-${layout}`);
-            activeBtn.classList.remove('text-gray-600', 'hover:text-gray-900');
-            activeBtn.classList.add('bg-brand-600', 'text-white');
-            
-            switch(layout) {
-                case 'presentation':
-                    // 프레젠테이션만 보기
-                    editorSection.classList.add('hidden');
-                    editorSection.classList.remove('flex');
-                    presentationSection.classList.remove('hidden');
-                    break;
-                    
-                case 'split':
-                    // 분할 보기
-                    container.classList.remove('flex');
-                    container.classList.add('flex', 'flex-col', 'lg:flex-row');
-                    editorSection.classList.remove('hidden', 'w-1/2');
-                    editorSection.classList.add('flex', 'flex-col', 'lg:w-1/2');
-                    presentationSection.classList.remove('hidden');
-                    break;
-                    
-                case 'editor':
-                    // 에디터만 보기
-                    editorSection.classList.remove('hidden', 'w-1/2');
-                    editorSection.classList.add('flex', 'flex-col', 'w-full');
-                    presentationSection.classList.add('hidden');
-                    break;
-            }
-            
-            // 에디터 내용 동기화
-            syncEditorContent();
-        }
-
-        function toggleInput() {
-            inputVisible = !inputVisible;
-            const inputArea = document.getElementById('input-area');
-            
-            if (inputVisible) {
-                inputArea.classList.remove('h-0', 'opacity-0');
-                inputArea.classList.add('h-auto', 'opacity-100');
-            } else {
-                inputArea.classList.remove('h-auto', 'opacity-100');
-                inputArea.classList.add('h-0', 'opacity-0');
-            }
-        }
-
-        function syncEditorContent() {
-            const mainTextarea = document.getElementById('markdown-input');
-            const editorTextarea = document.getElementById('editor-textarea');
-            
-            // 메인 텍스트에서 에디터로 동기화
-            if (mainTextarea.value !== editorTextarea.value) {
-                editorTextarea.value = mainTextarea.value;
-            }
-        }
-
-        function parseMarkdown() {
-            // 에디터에서 메인 텍스트로 동기화
-            const mainTextarea = document.getElementById('markdown-input');
-            const editorTextarea = document.getElementById('editor-textarea');
-            
-            if (currentLayout === 'editor' || currentLayout === 'split') {
-                mainTextarea.value = editorTextarea.value;
-            }
-            
-            let input = mainTextarea.value.trim();
-            if (!input) {
-                alert('마크다운 내용을 입력해주세요.');
-                return;
-            }
-
-            // MARP 형식 처리 (frontmatter 제거)
-            if (input.startsWith('---')) {
-                const frontmatterEnd = input.indexOf('---', 3);
-                if (frontmatterEnd !== -1) {
-                    input = input.substring(frontmatterEnd + 3).trim();
-                }
-            }
-
-            slides = [];
-            // --- 으로 슬라이드 분할 (더 유연한 패턴)
-            const slideTexts = input.split(/\n\s*---\s*\n|\n\s*---\s*$|^\s*---\s*\n/);
-            
-            let lastH1Title = null; // 이전 H1 제목 추적
-            
-            slideTexts.forEach((slideText, index) => {
-                slideText = slideText.trim();
-                if (!slideText) return;
-                
-                const lines = slideText.split('\n');
-                let title = `슬라이드 ${index + 1}`;
-                let h1Title = null;
-                let h2Title = null;
-                let content = slideText;
-                let titleLineIndex = -1;
-                
-                // H1과 H2 제목 찾기
-                for (let i = 0; i < lines.length; i++) {
-                    const line = lines[i].trim();
-                    if (line.startsWith('# ') && !h1Title) {
-                        h1Title = line.substring(2).trim();
-                        titleLineIndex = i;
-                        break;
-                    } else if (line.startsWith('## ') && !h2Title) {
-                        h2Title = line.substring(3).trim();
-                        if (!h1Title) titleLineIndex = i; // H1이 없으면 H2를 제목 라인으로
-                    }
-                }
-                
-                // 제목 결정 로직
-                if (h1Title) {
-                    // H1이 있으면 H1 사용하고 lastH1Title 업데이트
-                    lastH1Title = h1Title;
-                    title = h1Title;
-                } else if (h2Title && lastH1Title) {
-                    // H1이 없고 H2가 있으면서 이전 H1이 있으면 연결
-                    title = `${lastH1Title} > ${h2Title}`;
-                } else if (h2Title) {
-                    // H1이 없고 H2만 있으면 H2 사용
-                    title = h2Title;
-                }
-                
-                // 이모지와 특수문자 제거 (네비게이션 표시용)
-                const cleanTitle = title.replace(/[📝🎯🔤📊👁️🔬🌟🚀💡🌍🧩🔍💭🎭🏗️💻🤓📚]/g, '').trim();
-                const displayTitle = cleanTitle || title;
-                
-                // 제목 라인을 제거한 나머지 내용
-                if (titleLineIndex >= 0) {
-                    const remainingLines = [...lines];
-                    remainingLines.splice(titleLineIndex, 1);
-                    content = remainingLines.join('\n').trim();
-                }
-                
-                // 원본 제목 (표시용) 결정
-                let originalTitle = title;
-                if (h1Title) {
-                    originalTitle = `# ${h1Title}`;
-                } else if (h2Title && lastH1Title) {
-                    originalTitle = `# ${lastH1Title}\n## ${h2Title}`;
-                } else if (h2Title) {
-                    originalTitle = `## ${h2Title}`;
-                }
-                
-                slides.push({
-                    title: displayTitle,
-                    content: content,
-                    originalTitle: originalTitle,
-                    h1Title: h1Title,
-                    h2Title: h2Title,
-                    parentH1: lastH1Title,
-                    isSubSlide: !h1Title && h2Title && lastH1Title
-                });
-            });
-
-            if (slides.length === 0) {
-                alert('슬라이드 내용이 없습니다. --- 으로 슬라이드를 구분하세요.');
-                return;
-            }
-
-            renderSlides();
-            showSlide(0);
-        }
-
-        function renderSlides() {
-            const navigation = document.getElementById('slide-navigation');
-            const viewer = document.getElementById('slide-viewer');
-            
-            // 네비게이션 렌더링
-            navigation.innerHTML = '';
-            slides.forEach((slide, index) => {
-                const navItem = document.createElement('div');
-                navItem.className = 'p-4 border-b border-gray-200 cursor-pointer transition-colors hover:bg-gray-100 group';
-                navItem.onclick = () => showSlide(index);
-                
-                const preview = slide.content.length > 100 
-                    ? slide.content.substring(0, 100) + '...' 
-                    : slide.content;
-                
-                navItem.innerHTML = `
-                    <div class="font-semibold text-sm text-gray-900 mb-2 group-hover:text-brand-600">${index + 1}. ${slide.title}</div>
-                    <div class="text-xs text-gray-600 line-clamp-3 leading-relaxed">${preview}</div>
-                `;
-                navigation.appendChild(navItem);
-            });
-
-            // 컨트롤 표시
-            document.getElementById('page-indicator').classList.remove('hidden');
-            document.getElementById('slide-controls').classList.remove('hidden');
-        }
-
-        function showSlide(index) {
-            if (index < 0 || index >= slides.length) return;
-            
-            currentSlide = index;
-            const slide = slides[index];
-            const viewer = document.getElementById('slide-viewer');
-            
-            // 슬라이드 헤더 렌더링 (연속성 고려)
-            let headerHtml = '';
-            if (slide.isSubSlide) {
-                // H1 없이 H2만 있는 연속 슬라이드
-                headerHtml = `
-                    <div class="sticky top-0 bg-white border-b-2 border-brand-500 px-8 py-6 z-10 shadow-sm">
-                        <div class="text-gray-500 text-sm font-medium mb-2 uppercase tracking-wide opacity-75">
-                            📂 ${slide.parentH1}
-                        </div>
-                        <h1 class="text-2xl font-bold text-gray-900 flex items-center">
-                            <span class="text-brand-500 mr-2">└</span> ${slide.h2Title}
-                        </h1>
-                    </div>
-                `;
-            } else if (slide.h1Title) {
-                // 일반적인 H1 슬라이드
-                headerHtml = `
-                    <div class="sticky top-0 bg-white border-b-2 border-brand-500 px-8 py-6 z-10 shadow-sm">
-                        <h1 class="text-3xl font-bold text-gray-900">${slide.h1Title}</h1>
-                    </div>
-                `;
-            } else {
-                // 기타 경우 (fallback)
-                headerHtml = `
-                    <div class="sticky top-0 bg-white border-b-2 border-brand-500 px-8 py-6 z-10 shadow-sm">
-                        <h1 class="text-3xl font-bold text-gray-900">${slide.originalTitle || slide.title}</h1>
-                    </div>
-                `;
-            }
-            
-            // 슬라이드 내용 렌더링
-            viewer.innerHTML = `
-                ${headerHtml}
-                <div class="flex-1 p-8 overflow-y-auto prose prose-lg max-w-none">
-                    ${markdownToHtml(slide.content)}
-                </div>
-            `;
-
-            // 네비게이션 활성화 상태 업데이트
-            document.querySelectorAll('#slide-navigation > div').forEach((item, i) => {
-                if (i === index) {
-                    item.classList.remove('hover:bg-gray-100');
-                    item.classList.add('bg-brand-50', 'border-r-4', 'border-brand-500');
-                    item.querySelector('.font-semibold').classList.add('text-brand-600');
-                } else {
-                    item.classList.remove('bg-brand-50', 'border-r-4', 'border-brand-500');
-                    item.classList.add('hover:bg-gray-100');
-                    item.querySelector('.font-semibold').classList.remove('text-brand-600');
-                }
-            });
-
-            // 페이지 표시 업데이트
-            document.getElementById('page-indicator').textContent = `${index + 1} / ${slides.length}`;
-
-            // 슬라이드 내용 맨 위로 스크롤
-            const slideContent = viewer.querySelector('.prose');
-            if (slideContent) {
-                slideContent.scrollTop = 0;
-                
-                // 수학 수식 렌더링
-                if (window.renderMathInElement) {
-                    renderMathInElement(slideContent, {
-                        delimiters: [
-                            {left: '$$', right: '$$', display: true},
-                            {left: '$', right: '$', display: false}
-                        ],
-                        throwOnError: false
-                    });
-                }
-                
-                // 코드 하이라이팅
-                if (window.hljs) {
-                    slideContent.querySelectorAll('pre code').forEach((block) => {
-                        hljs.highlightElement(block);
-                    });
-                }
-            }
-        }
-
-        function markdownToHtml(markdown) {
-            // 수학 수식 임시 플레이스홀더로 교체 (처리 순서 중요)
-            const mathExpressions = [];
-            let mathIndex = 0;
-            
-            // Display math ($$...$$)
-            markdown = markdown.replace(/\$\$([\s\S]*?)\$\$/g, (match, expr) => {
-                mathExpressions[mathIndex] = { type: 'display', expr: expr.trim() };
-                return `__MATH_${mathIndex++}__`;
-            });
-            
-            // Inline math ($...$)
-            markdown = markdown.replace(/\$([^$\n]+?)\$/g, (match, expr) => {
-                mathExpressions[mathIndex] = { type: 'inline', expr: expr.trim() };
-                return `__MATH_${mathIndex++}__`;
-            });
-            
-            // 코드 블록 처리 (언어 지정 가능)
-            markdown = markdown.replace(/```(\w+)?\n?([\s\S]*?)```/g, (match, lang, code) => {
-                const language = lang || '';
-                const languageLabel = language ? `<span class="code-language">${language}</span>` : '';
-                return `<pre>${languageLabel}<code class="language-${language}">${code.trim()}</code></pre>`;
-            });
-
-            // 테이블 처리
-            markdown = markdown.replace(/(\|.*\|.*\n\|[-:| ]*\|.*\n(?:\|.*\|.*\n?)*)/gm, (match) => {
-                const lines = match.trim().split('\n');
-                if (lines.length < 2) return match;
-                
-                const headerLine = lines[0];
-                const separatorLine = lines[1];
-                const dataLines = lines.slice(2);
-                
-                // 헤더 파싱
-                const headers = headerLine.split('|').map(h => h.trim()).filter(h => h);
-                
-                // 데이터 행 파싱
-                const rows = dataLines.map(line => 
-                    line.split('|').map(cell => cell.trim()).filter(cell => cell)
-                );
-                
-                // HTML 테이블 생성
-                let tableHtml = '<table>\n<thead>\n<tr>\n';
-                headers.forEach(header => {
-                    tableHtml += `<th>${header}</th>\n`;
-                });
-                tableHtml += '</tr>\n</thead>\n<tbody>\n';
-                
-                rows.forEach(row => {
-                    if (row.length > 0) {
-                        tableHtml += '<tr>\n';
-                        row.forEach(cell => {
-                            tableHtml += `<td>${cell}</td>\n`;
-                        });
-                        tableHtml += '</tr>\n';
-                    }
-                });
-                
-                tableHtml += '</tbody>\n</table>';
-                return tableHtml;
-            });
-            
-            // 나머지 마크다운 처리
-            let html = markdown
-                .replace(/### (.*)/g, '<h3>$1</h3>')
-                .replace(/## (.*)/g, '<h2>$1</h2>')
-                .replace(/`([^`]+)`/g, '<code>$1</code>')
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                .replace(/^- (.*)$/gm, '<li>$1</li>')
-                .replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>')
-                .replace(/^> (.*)$/gm, '<blockquote>$1</blockquote>')
-                .replace(/\n\n/g, '</p><p>')
-                .replace(/^(?!<[hlu]|<p|<blockquote|<pre)(.+)$/gm, '<p>$1</p>')
-                .replace(/<\/ul>\s*<ul>/g, '')
-                .replace(/^<p><\/p>$/gm, '');
-            
-            // 수학 수식 복원
-            html = html.replace(/__MATH_(\d+)__/g, (match, index) => {
-                const math = mathExpressions[index];
-                if (!math) return match;
-                
-                if (math.type === 'display') {
-                    return `<div class="math-display">$$${math.expr}$$</div>`;
-                } else {
-                    return `<span class="math-inline">$${math.expr}$</span>`;
-                }
-            });
-            
-            return html;
-        }
-
-        function previousSlide() {
-            if (currentSlide > 0) {
-                showSlide(currentSlide - 1);
-            }
-        }
-
-        function nextSlide() {
-            if (currentSlide < slides.length - 1) {
-                showSlide(currentSlide + 1);
-            }
-        }
-
-        function loadSample() {
-            const sampleMarkdown = `# 🎯 Marp Vertical 소개
-## 세로 스크롤 프레젠테이션 뷰어
-
-이것은 **Marp Vertical** 프레젠테이션 뷰어입니다.
-
-### 주요 특징
-- 세로 스크롤링 지원
-- H1 제목 상단 고정
-- 페이지 번호 항상 표시
-- 마크다운 문법 지원
-- **수학 수식 지원** 🧮
-- **코드 문법 강조** 💻
-- **🆕 Marp 테마 시스템**: 6가지 완전히 다른 디자인
-- **🆕 연속 슬라이드**: H1 없이 H2만 있으면 이전 제목 유지
-
-긴 내용이 있어도 스크롤로 모든 내용을 볼 수 있습니다.
-
-### 수학 수식 예제
-인라인 수학: $E = mc^2$ 
-
-블록 수학:
-$$\\int_{-\\infty}^{\\infty} e^{-x^2} dx = \\sqrt{\\pi}$$
-
-\`\`\`javascript
-// JavaScript 코드 블록
-function factorial(n) {
-    if (n <= 1) return 1;
-    return n * factorial(n - 1);
-}
-
-console.log(factorial(5)); // 120
-\`\`\`
-
-> 인용문도 이렇게 표시됩니다.
-
----
-
-# 🎨 Marp 테마 시스템
-## 6가지 완전히 다른 디자인
-
-상단의 **🎨 테마** 드롭다운에서 다양한 테마를 체험해보세요!
-
-### 📋 Default Theme
-- 깔끔하고 모던한 디자인
-- Tailwind CSS 기반
-- 밝은 배경에 어두운 텍스트
-- **현재 적용된 테마입니다**
-
-### 🌙 Gaia Theme  
-- 어두운 배경의 우아한 디자인
-- 백드롭 블러 효과
-- 밝은 텍스트로 가독성 향상
-- 프레젠테이션에 최적화
-
-### 📰 Uncover Theme
-- 미니멀하고 깔끔한 스타일
-- Georgia 세리프 폰트
-- 신문/잡지 스타일 레이아웃
-- 텍스트 중심 콘텐츠에 적합
-
----
-
-## Academic & Business 테마
-
-### 🎓 Academic Theme
-- 학술 논문 스타일
-- Times New Roman 폰트
-- 정형화된 레이아웃
-- 연구 발표에 적합
-
-### 💼 Business Theme  
-- 전문적인 비즈니스 스타일
-- 그라디언트 제목 효과
-- 깔끔한 Inter 폰트
-- 기업 프레젠테이션에 최적
-
-### 🌿 Nature Theme
-- 자연스럽고 친근한 색상
-- 녹색 계열 강조색
-- 부드러운 그라디언트 배경
-- 환경/교육 주제에 적합
-
----
-
-# 수학과 과학 
-## 물리학 공식들
-
-### 운동 방정식
-뉴턴의 제2법칙: $F = ma$
-
-자유낙하 공식:
-$$h = v_0 t + \\frac{1}{2}gt^2$$
-
-### 에너지 보존
-운동에너지: $KE = \\frac{1}{2}mv^2$
-
-위치에너지: $PE = mgh$
-
-\`\`\`python
-# Python으로 물리 계산
-import math
-
-def kinetic_energy(mass, velocity):
-    """운동에너지 계산"""
-    return 0.5 * mass * velocity**2
-
-def potential_energy(mass, height, g=9.81):
-    """위치에너지 계산"""
-    return mass * g * height
-
-# 예제
-mass = 10  # kg
-velocity = 5  # m/s
-height = 20  # m
-
-ke = kinetic_energy(mass, velocity)
-pe = potential_energy(mass, height)
-
-print(f"운동에너지: {ke} J")
-print(f"위치에너지: {pe} J")
-\`\`\`
-
----
-
-# 프로그래밍 예제
-## 다양한 언어 지원
-
-### JavaScript
-\`\`\`javascript
-// 비동기 함수 예제
-async function fetchData(url) {
-    try {
-        const response = await fetch(url);
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error('Error:', error);
-    }
-}
-\`\`\`
-
-### Python
-\`\`\`python
-# 클래스와 상속 예제
-class Animal:
-    def __init__(self, name):
-        self.name = name
-    
-    def speak(self):
-        pass
-
-class Dog(Animal):
-    def speak(self):
-        return f"{self.name}가 멍멍!"
-
-dog = Dog("바둑이")
-print(dog.speak())
-\`\`\`
-
-### 수학적 증명
-피타고라스 정리: $a^2 + b^2 = c^2$
-
-이항정리:
-$$(x + y)^n = \\sum_{k=0}^{n} \\binom{n}{k} x^{n-k} y^k$$
-
----
-
-# 테마별 추천 사용법
-## 목적에 맞는 테마 선택
-
-### 📋 **Default** - 일반적인 모든 용도
-- 개발자 문서
-- 일반 프레젠테이션
-- 튜토리얼
-
-### 🌙 **Gaia** - 몰입형 프레젠테이션
-- 컨퍼런스 발표
-- 제품 런칭
-- 창의적 프레젠테이션
-
-### 📰 **Uncover** - 텍스트 중심 콘텐츠  
-- 블로그 포스트
-- 뉴스레터
-- 에세이
-
-### 🎓 **Academic** - 학술/연구 발표
-- 논문 발표
-- 학회 프레젠테이션  
-- 연구 보고서
-
-### 💼 **Business** - 기업 프레젠테이션
-- 투자 피칭
-- 분기별 보고
-- 마케팅 자료
-
-### 🌿 **Nature** - 친환경/교육 주제
-- 환경 프레젠테이션
-- 교육 자료
-- 워크샵
-
----
-
-# 🚀 완성된 기능들
-## 모든 기능이 테마와 호환됩니다
-
-### ✅ **핵심 기능**
-- **6가지 Marp 테마**: 완전히 다른 디자인
-- **수학 수식**: $\\LaTeX$ 문법으로 아름다운 수식  
-- **코드 강조**: 다양한 프로그래밍 언어 지원  
-- **테이블 지원**: 데이터를 깔끔하게 정리  
-- **GitHub 연동**: URL만 입력하면 자동 로드  
-- **풀스크린**: 테마별 최적화된 프레젠테이션 모드
-- **레이아웃**: 목차 위치 자유자재로  
-- **연속 슬라이드**: H1 없이 H2만 있으면 이전 H1 제목 유지
-
-### 🎯 **사용법**
-1. **테마 선택**: 🎨 테마 드롭다운에서 원하는 스타일 선택
-2. **직접 입력**: 마크다운을 입력하고 "프레젠테이션 생성"
-3. **GitHub 로드**: "📁 GitHub 로드" → URL 입력 → 자동 풀스크린
-4. **레이아웃**: 📍 목차 위치를 왼쪽/오른쪽 선택
-5. **풀스크린**: 🖥️ 풀스크린으로 프레젠테이션 집중
-6. **ESC 키**: 풀스크린 모드 해제
-
-### 💡 **지원 문법**
-- 수학 수식: \$...\$ (인라인), \$\$...\$\$ (블록)
-- 코드: \\\`\\\`\\\`언어이름 으로 시작  
-- 테이블: | 헤더1 | 헤더2 | 형식
-- MARP 형식도 완벽 지원!
-
-**🎨 다양한 테마로 멋진 프레젠테이션을 만들어보세요!** 🎉
-
----
-
-# 데이터 테이블
-## 테마별 특징 비교
-
-| 테마 | 배경 | 폰트 | 용도 | 특징 |
-|------|------|------|------|------|
-| 📋 Default | 밝은 그라디언트 | Inter | 일반 | 모던하고 깔끔 |
-| 🌙 Gaia | 어두운 그라디언트 | Inter | 프레젠테이션 | 백드롭 블러 |
-| 📰 Uncover | 최소한의 흰색 | Georgia | 텍스트 | 미니멀 디자인 |
-| 🎓 Academic | 학술적 회색 | Times | 연구 | 정형화된 구조 |
-| 💼 Business | 비즈니스 블루 | Inter | 기업 | 전문적 느낌 |
-| 🌿 Nature | 자연 그라디언트 | Inter | 교육 | 친환경적 색상 |
-
-### 성능 비교
-| 기능 | 지원 여부 | 모든 테마 호환 | 비고 |
-|------|-----------|----------------|------|
-| 수학 수식 | ✅ | ✅ | LaTeX 문법 |
-| 코드 강조 | ✅ | ✅ | 다양한 언어 |
-| 테이블 | ✅ | ✅ | **새로 추가!** |
-| GitHub 연동 | ✅ | ✅ | URL만 입력 |
-| 풀스크린 | ✅ | ✅ | 테마별 최적화 |
-| 반응형 | ✅ | ✅ | 모바일 지원 |
-
----
-
-# 머신러닝 기초
-## 개요와 소개
-
-머신러닝은 컴퓨터가 데이터로부터 학습하는 기술입니다.
-
-### 주요 개념
-- **지도학습**: 정답이 있는 데이터로 학습
-- **비지도학습**: 정답 없이 패턴 발견  
-- **강화학습**: 보상을 통한 학습
-
-\`\`\`python
-# 간단한 선형 회귀 예제
-import numpy as np
-from sklearn.linear_model import LinearRegression
-
-X = np.array([[1], [2], [3], [4], [5]])
-y = np.array([2, 4, 6, 8, 10])
-
-model = LinearRegression().fit(X, y)
-prediction = model.predict([[6]])
-print(f"예측값: {prediction[0]}")  # 12
-\`\`\`
-
----
-
-## 지도학습 세부 내용
-> 이 슬라이드는 H1이 없고 H2만 있습니다!
-> 헤더에 "📂 머신러닝 기초 > 지도학습 세부 내용" 형태로 표시됩니다.
-
-### 분류 (Classification)
-데이터를 카테고리로 나누는 작업입니다.
-
-**주요 알고리즘**:
-- 로지스틱 회귀: $P(y=1|x) = \\frac{1}{1 + e^{-(\\beta_0 + \\beta_1 x)}}$
-- SVM: 결정 경계를 최적화
-- 랜덤 포레스트: 여러 결정 트리의 앙상블
-
-### 회귀 (Regression)  
-연속적인 수치를 예측하는 작업입니다.
-
-| 알고리즘 | 수식 | 특징 |
-|----------|------|------|
-| 선형 회귀 | $y = \\beta_0 + \\beta_1 x + \\epsilon$ | 단순하고 해석 가능 |
-| 다항 회귀 | $y = \\beta_0 + \\beta_1 x + \\beta_2 x^2 + \\epsilon$ | 비선형 관계 모델링 |
-| 리지 회귀 | $\\min ||y - X\\beta||^2 + \\lambda||\\beta||^2$ | 과적합 방지 |
-
----
-
-## 비지도학습과 강화학습
-> 이 슬라이드도 연속 슬라이드입니다!
-> "📂 머신러닝 기초 > 비지도학습과 강화학습"으로 표시됩니다.
-
-### 클러스터링
-비슷한 데이터끼리 그룹화하는 기법입니다.
-
-**K-Means 알고리즘**:
-1. k개의 중심점 랜덤 초기화
-2. 각 점을 가장 가까운 중심점에 할당
-3. 중심점을 클러스터 내 점들의 평균으로 업데이트
-4. 수렴할 때까지 2-3 반복
-
-목적 함수: $J = \\sum_{i=1}^{k} \\sum_{x \\in C_i} ||x - \\mu_i||^2$
-
-### 강화학습
-환경과 상호작용하며 보상을 최대화하는 학습입니다.
-
-\`\`\`python
-# Q-Learning 의사코드
-def q_learning(env, episodes=1000, alpha=0.1, gamma=0.9, epsilon=0.1):
-    Q = initialize_q_table()
-    
-    for episode in range(episodes):
-        state = env.reset()
-        done = False
-        
-        while not done:
-            if random.random() < epsilon:
-                action = env.action_space.sample()  # 탐험
-            else:
-                action = np.argmax(Q[state])  # 활용
-                
-            next_state, reward, done = env.step(action)
-            
-            # Q-value 업데이트
-            Q[state][action] += alpha * (
-                reward + gamma * np.max(Q[next_state]) - Q[state][action]
-            )
-            
-            state = next_state
-    
-    return Q
-\`\`\`
-
----
-
-# 머신러닝 기초
-## 개요와 소개
-
-머신러닝은 컴퓨터가 데이터로부터 학습하는 기술입니다.
-
-### 주요 개념
-- **지도학습**: 정답이 있는 데이터로 학습
-- **비지도학습**: 정답 없이 패턴 발견  
-- **강화학습**: 보상을 통한 학습
-
-\`\`\`python
-# 간단한 선형 회귀 예제
-import numpy as np
-from sklearn.linear_model import LinearRegression
-
-X = np.array([[1], [2], [3], [4], [5]])
-y = np.array([2, 4, 6, 8, 10])
-
-model = LinearRegression().fit(X, y)
-prediction = model.predict([[6]])
-print(f"예측값: {prediction[0]}")  # 12
-\`\`\`
-
----
-
-## 지도학습 세부 내용
-> 이 슬라이드는 H1이 없고 H2만 있습니다!
-> 헤더에 "📂 머신러닝 기초 > 지도학습 세부 내용" 형태로 표시됩니다.
-
-### 분류 (Classification)
-데이터를 카테고리로 나누는 작업입니다.
-
-**주요 알고리즘**:
-- 로지스틱 회귀: $P(y=1|x) = \\frac{1}{1 + e^{-(\\beta_0 + \\beta_1 x)}}$
-- SVM: 결정 경계를 최적화
-- 랜덤 포레스트: 여러 결정 트리의 앙상블
-
-### 회귀 (Regression)
-연속적인 수치를 예측하는 작업입니다.
-
-| 알고리즘 | 수식 | 특징 |
-|----------|------|------|
-| 선형 회귀 | $y = \\beta_0 + \\beta_1 x + \\epsilon$ | 단순하고 해석 가능 |
-| 다항 회귀 | $y = \\beta_0 + \\beta_1 x + \\beta_2 x^2 + \\epsilon$ | 비선형 관계 모델링 |
-| 리지 회귀 | $\\min ||y - X\\beta||^2 + \\lambda||\\beta||^2$ | 과적합 방지 |
-
----
-
-## 비지도학습 알고리즘
-> 이 슬라이드도 H1이 없고 H2만 있습니다!
-> "📂 머신러닝 기초 > 비지도학습 알고리즘"으로 표시됩니다.
-
-### 클러스터링
-비슷한 데이터끼리 그룹화하는 기법입니다.
-
-**K-Means 알고리즘**:
-1. k개의 중심점 랜덤 초기화
-2. 각 점을 가장 가까운 중심점에 할당
-3. 중심점을 클러스터 내 점들의 평균으로 업데이트
-4. 수렴할 때까지 2-3 반복
-
-목적 함수: $J = \\sum_{i=1}^{k} \\sum_{x \\in C_i} ||x - \\mu_i||^2$
-
-### 차원 축소
-고차원 데이터를 저차원으로 변환합니다.
-
-**Python 코드:**
-# PCA 예제
-from sklearn.decomposition import PCA
-import numpy as np
-
-# 고차원 데이터 생성
-X = np.random.rand(100, 10)
-
-# PCA로 2차원으로 축소
-pca = PCA(n_components=2)
-X_reduced = pca.fit_transform(X)
-
-print("원본 차원:", X.shape)
-print("축소 차원:", X_reduced.shape)
-print("설명 분산비:", pca.explained_variance_ratio_)
-
----
-
-# 🎉 테마 체험 완료!
-## 지금 바로 다른 테마를 체험해보세요
-
-### 🎨 상단 테마 드롭다운을 클릭하여 6가지 테마를 체험하세요:
-
-1. **📋 Default** - 현재 보고 계신 깔끔한 모던 테마
-2. **🌙 Gaia** - 어두운 배경의 우아한 프레젠테이션 테마  
-3. **📰 Uncover** - 미니멀한 신문/잡지 스타일
-4. **🎓 Academic** - 학술 논문 스타일의 정형화된 테마
-5. **💼 Business** - 전문적인 비즈니스 프레젠테이션 테마
-6. **🌿 Nature** - 자연스럽고 친근한 친환경 테마
-
-### 💡 팁
-- 각 테마는 완전히 다른 디자인과 폰트를 사용합니다
-- 풀스크린 모드에서 테마별 차이가 더욱 선명합니다
-- 연속 슬라이드 기능으로 H1 없이 H2만 있어도 자연스럽게 연결됩니다
-
-### 🚀 다음 단계
-- GitHub 로드로 실제 마크다운 파일을 불러와보세요
-- 공식 데모로 TRAS NLP 슬라이드를 체험해보세요
-- 여러분만의 마크다운으로 멋진 프레젠테이션을 만들어보세요!
-
-**Marp 테마 시스템으로 프레젠테이션의 새로운 경험을 시작하세요!**
-
----
-
-            document.getElementById('markdown-input').value = sampleMarkdown;
-            document.getElementById('editor-textarea').value = sampleMarkdown;
-            parseMarkdown();
-        }
-
-        function clearAll() {
-            document.getElementById('markdown-input').value = '';
-            document.getElementById('editor-textarea').value = '';
-            slides = [];
-            currentSlide = 0;
-            
-            document.getElementById('slide-navigation').innerHTML = 
-                '<div class="flex flex-col items-center justify-center h-full text-center p-8">' +
-                    '<div class="text-6xl mb-4">📋</div>' +
-                    '<div class="text-gray-600 mb-4">' +
-                        '마크다운을 입력하고<br>프레젠테이션을 생성하세요' +
-                    '</div>' +
-                    '<button onclick="loadOfficialDemo()" class="px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 font-medium text-sm transition-colors">' +
-                        '🎯 공식 데모 보기' +
-                    '</button>' +
-                '</div>';
-            
-            document.getElementById('slide-viewer').innerHTML = 
-                '<div class="flex flex-col items-center justify-center h-full text-center p-8">' +
-                    '<div class="text-8xl mb-6">🎭</div>' +
-                    '<div class="max-w-2xl">' +
-                        '<h3 class="text-2xl font-bold text-gray-900 mb-4">환영합니다!</h3>' +
-                        '<p class="text-gray-600 mb-6">' +
-                            '위의 텍스트 영역에 마크다운을 입력하고<br>' +
-                            '"프레젠테이션 생성" 버튼을 클릭하세요.' +
-                        '</p>' +
-                        '<div class="text-left text-sm text-gray-500 space-y-1">' +
-                            '<p>• --- 으로 슬라이드를 구분합니다</p>' +
-                            '<p>• 긴 내용은 자동으로 스크롤됩니다</p>' +
-                            '<p>• 제목은 항상 상단에 고정됩니다</p>' +
-                            '<p>• 수학 수식 지원: $...$, $$...$$</p>' +
-                            '<p>• 코드 문법 강조: ```언어명</p>' +
-                        '</div>' +
-                    '</div>' +
-                '</div>';
-            
-            document.getElementById('page-indicator').classList.add('hidden');
-            document.getElementById('slide-controls').classList.add('hidden');
-        }
-
-        // 에디터 텍스트에어리어 실시간 동기화
-        document.addEventListener('DOMContentLoaded', function() {
-            const editorTextarea = document.getElementById('editor-textarea');
-            const mainTextarea = document.getElementById('markdown-input');
-            
-            editorTextarea.addEventListener('input', function() {
-                mainTextarea.value = editorTextarea.value;
-            });
-            
-            mainTextarea.addEventListener('input', function() {
-                editorTextarea.value = mainTextarea.value;
-            });
-        });
-
-        // 키보드 단축키 지원
-        document.addEventListener('keydown', function(e) {
-            if (slides.length === 0) return;
-            
-            // 텍스트 입력 중이 아닐 때만 단축키 동작
-            if (e.target.tagName === 'TEXTAREA') return;
-            
-            if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-                e.preventDefault();
-                previousSlide();
-            } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-                e.preventDefault();
-                nextSlide();
-            }
-        });
-
-        // 테마 변경 함수 - Marp 스타일 테마 시스템
-        function changeTheme(theme) {
-            currentTheme = theme;
-            const body = document.body;
-            
-            // 기존 모든 테마 클래스 제거
-            body.classList.remove(
-                'theme-default', 'theme-gaia', 'theme-uncover', 
-                'theme-academic', 'theme-business', 'theme-nature'
-            );
-            
-            // 새 테마 클래스 적용
-            body.classList.add(`theme-${theme}`);
-            
-            // 테마에 따른 특별한 처리
-            const header = document.getElementById('header');
-            const container = document.getElementById('viewer-container');
-            
-            // 풀스크린 상태 유지
-            if (isFullscreen) {
-                header.classList.add('hidden');
-                container.classList.remove('m-4', 'rounded-xl', 'shadow-lg');
-                container.classList.add('h-screen', 'rounded-none');
-            }
-            
-            // 테마별 특별한 설정
-            switch(theme) {
-                case 'gaia':
-                    // Gaia 테마는 어두운 배경이므로 텍스트 색상 조정
-                    updateTextColorsForDarkTheme();
-                    break;
-                case 'academic':
-                    // Academic 테마는 serif 폰트 사용
-                    updateFontsForAcademicTheme();
-                    break;
-                case 'uncover':
-                    // Uncover 테마는 미니멀한 스타일
-                    updateForMinimalTheme();
-                    break;
-                case 'business':
-                    // Business 테마는 프로페셔널한 스타일
-                    updateForBusinessTheme();
-                    break;
-                case 'nature':
-                    // Nature 테마는 자연스러운 색상
-                    updateForNatureTheme();
-                    break;
-                default:
-                    // Default 테마는 기본 스타일
-                    resetToDefaultTheme();
-                    break;
-            }
-            
-            console.log(`테마가 ${theme}으로 변경되었습니다.`);
-        }
-
-        // 테마별 보조 함수들
-        function updateTextColorsForDarkTheme() {
-            const elements = document.querySelectorAll('#header h1, #header label, #header button');
-            elements.forEach(el => {
-                if (!el.classList.contains('bg-gradient-to-r')) {
-                    el.style.color = '#ffffff';
-                }
-            });
-        }
-
-        function updateFontsForAcademicTheme() {
-            // Academic 테마에서는 Times 폰트 사용이 CSS에서 처리됨
-        }
-
-        function updateForMinimalTheme() {
-            // Uncover 테마의 미니멀한 스타일은 CSS에서 처리됨
-        }
-
-        function updateForBusinessTheme() {
-            // Business 테마의 프로페셔널한 스타일은 CSS에서 처리됨
-        }
-
-        function updateForNatureTheme() {
-            // Nature 테마의 자연스러운 색상은 CSS에서 처리됨
-        }
-
-        function resetToDefaultTheme() {
-            // 기본 테마로 리셋
-            const elements = document.querySelectorAll('#header h1, #header label, #header button');
-            elements.forEach(el => {
-                el.style.color = '';
-            });
-        }
-
-        // 네비게이션 위치 변경
-        function changeNavPosition(position) {
-            navPosition = position;
-            const presentationSection = document.getElementById('presentation-section');
-            const slideNavigation = document.getElementById('slide-navigation');
-            
-            if (position === 'right') {
-                presentationSection.classList.add('flex-row-reverse');
-                slideNavigation.classList.remove('border-r');
-                slideNavigation.classList.add('border-l');
-            } else {
-                presentationSection.classList.remove('flex-row-reverse');
-                slideNavigation.classList.remove('border-l');
-                slideNavigation.classList.add('border-r');
-            }
-        }
-
-        // 풀스크린 토글 - 테마 시스템 호환
-        function toggleFullscreen() {
-            isFullscreen = !isFullscreen;
-            const body = document.body;
-            const header = document.getElementById('header');
-            const container = document.getElementById('viewer-container');
-            
-            if (isFullscreen) {
-                // 풀스크린 진입
-                header.classList.add('hidden');
-                container.classList.remove('m-4', 'rounded-xl', 'shadow-lg');
-                container.classList.add('h-screen', 'rounded-none');
-                
-                // 테마별 풀스크린 스타일 적용
-                applyFullscreenThemeStyles();
-                
-                // 프레젠테이션 모드로 강제 전환
-                setLayout('presentation');
-                // ESC 키 리스너 추가
-                document.addEventListener('keydown', escapeFullscreen);
-            } else {
-                // 풀스크린 해제
-                header.classList.remove('hidden');
-                container.classList.add('m-4', 'rounded-xl', 'shadow-lg');
-                container.classList.remove('h-screen', 'rounded-none');
-                
-                // 원래 테마 스타일로 복원
-                restoreNormalThemeStyles();
-                
-                document.removeEventListener('keydown', escapeFullscreen);
-            }
-        }
-
-        // 풀스크린 시 테마별 스타일 적용
-        function applyFullscreenThemeStyles() {
-            const body = document.body;
-            
-            // 현재 테마에 따른 풀스크린 배경 설정
-            switch(currentTheme) {
-                case 'gaia':
-                    // Gaia 테마는 이미 어두운 배경이므로 그대로 유지
-                    break;
-                case 'academic':
-                    body.style.background = '#2c3e50';
-                    break;
-                case 'uncover':
-                    body.style.background = '#fafafa';
-                    break;
-                case 'business':
-                    body.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
-                    break;
-                case 'nature':
-                    body.style.background = 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)';
-                    break;
-                default:
-                    body.style.background = '#000000';
-                    break;
-            }
-        }
-
-        // 일반 모드 시 테마 스타일 복원
-        function restoreNormalThemeStyles() {
-            const body = document.body;
-            
-            // body의 인라인 스타일 제거하여 CSS 테마 클래스가 적용되도록 함
-            body.style.background = '';
-            
-            // 현재 테마 다시 적용
-            changeTheme(currentTheme);
-        }
-
-        function escapeFullscreen(e) {
-            if (e.key === 'Escape' && isFullscreen) {
-                toggleFullscreen();
-            }
-        }
-
-        // GitHub 모달 관련 함수들
-        function loadFromGitHub() {
-            document.getElementById('github-modal').classList.remove('hidden');
-            document.getElementById('github-modal').classList.add('flex');
-        }
-
-        function closeGitHubModal() {
-            document.getElementById('github-modal').classList.add('hidden');
-            document.getElementById('github-modal').classList.remove('flex');
-            document.getElementById('github-url').value = '';
-        }
-
-        // GitHub URL을 Raw URL로 변환
-        function convertToRawUrl(githubUrl) {
-            if (githubUrl.includes('github.com') && githubUrl.includes('/blob/')) {
-                return githubUrl.replace('github.com', 'raw.githubusercontent.com').replace('/blob/', '/');
-            }
-            return githubUrl;
-        }
-
-        // GitHub 파일 로드
-        async function loadGitHubFile() {
-            const url = document.getElementById('github-url').value.trim();
-            if (!url) {
-                alert('URL을 입력해주세요.');
-                return;
-            }
-
-            try {
-                const rawUrl = convertToRawUrl(url);
-                const response = await fetch(rawUrl);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                }
-                
-                const markdown = await response.text();
-                
-                // 마크다운 데이터를 텍스트 영역에 입력
-                document.getElementById('markdown-input').value = markdown;
-                document.getElementById('editor-textarea').value = markdown;
-                
-                // 자동으로 프레젠테이션 생성
-                parseMarkdown();
-                
-                // 모달 닫기
-                closeGitHubModal();
-                
-                // 풀스크린 모드로 전환
-                if (!isFullscreen) {
-                    toggleFullscreen();
-                }
-                
-            } catch (error) {
-                alert(`파일 로드 실패: ${error.message}\n\n올바른 GitHub URL인지 확인해주세요.\n예: https://github.com/user/repo/blob/main/file.md`);
-            }
-        }
-
-        // URL 파라미터에서 GitHub URL 확인
-        function loadFromUrlParameter() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const githubUrl = urlParams.get('url') || urlParams.get('github') || urlParams.get('md');
-            
-            if (githubUrl) {
-                // URL 디코딩
-                const decodedUrl = decodeURIComponent(githubUrl);
-                
-                // GitHub URL 자동 로드
-                loadGitHubFileFromUrl(decodedUrl);
-                return true;
-            }
-            return false;
-        }
-
-        // URL에서 직접 GitHub 파일 로드
-        async function loadGitHubFileFromUrl(url) {
-            try {
-                const rawUrl = convertToRawUrl(url);
-                const response = await fetch(rawUrl);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                }
-                
-                const markdown = await response.text();
-                
-                // 마크다운 데이터를 텍스트 영역에 입력
-                document.getElementById('markdown-input').value = markdown;
-                document.getElementById('editor-textarea').value = markdown;
-                
-                // 자동으로 프레젠테이션 생성
-                parseMarkdown();
-                
-                // 풀스크린 모드로 전환
-                setTimeout(() => {
-                    if (!isFullscreen) {
-                        toggleFullscreen();
-                    }
-                }, 500);
-                
-            } catch (error) {
-                alert(`GitHub 파일 로드 실패: ${error.message}\n\n다시 시도하거나 수동으로 파일을 로드해주세요.`);
-                // 실패시 기본 샘플 로드
-                loadSample();
-            }
-        }
-
-        // 공유 URL 생성 함수
-        function generateShareUrl() {
-            const currentUrl = window.location.origin + window.location.pathname;
-            const githubUrl = document.getElementById('github-url').value.trim();
-            
-            if (githubUrl) {
-                const shareUrl = `${currentUrl}?url=${encodeURIComponent(githubUrl)}`;
-                
-                // 클립보드에 복사
-                if (navigator.clipboard) {
-                    navigator.clipboard.writeText(shareUrl).then(() => {
-                        alert('공유 URL이 클립보드에 복사되었습니다!\n\n' + shareUrl);
-                    });
-                } else {
-                    // 클립보드 API가 지원되지 않는 경우
-                    prompt('공유 URL (Ctrl+C로 복사):', shareUrl);
-                }
-            }
-        }
-
-        // 공식 데모 로드
-        function loadOfficialDemo() {
-            const currentUrl = window.location.origin + window.location.pathname;
-            const officialDemoUrl = 'https://github.com/Baryon-ai/TRAS/blob/main/slides/section2_nlp_basics.md';
-            const demoUrl = `${currentUrl}?url=${encodeURIComponent(officialDemoUrl)}`;
-            
-            // 현재 페이지에서 데모 URL로 이동
-            window.location.href = demoUrl;
-        }
-
-        // 모달에서 공식 데모 URL 자동 입력
-        function loadOfficialDemoInModal() {
-            const officialDemoUrl = 'https://github.com/Baryon-ai/TRAS/blob/main/slides/section2_nlp_basics.md';
-            document.getElementById('github-url').value = officialDemoUrl;
-        }
-
-        // 초기 로드 시 URL 파라미터 확인 또는 샘플 표시
-        window.addEventListener('load', function() {
-            // 기본 레이아웃 설정
-            setLayout('presentation');
-            
-            if (!loadFromUrlParameter()) {
-                loadSample();
-            }
-        });
-    </script>
+    <!-- Scripts -->
+    <script type="module" src="/src/scripts/main.js"></script>
 </body>
-</html>
+</html> 

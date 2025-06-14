@@ -1,220 +1,194 @@
-# 🎯 Marp Vertical - 세로 스크롤 프레젠테이션 뷰어
+# 🎯 Marp Vertical - 모던 세로 스크롤 프레젠테이션 뷰어
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![GitHub stars](https://img.shields.io/github/stars/your-username/marp-vertical-viewer.svg)](https://github.com/your-username/marp-vertical-viewer/stargazers)
-[![GitHub issues](https://img.shields.io/github/issues/your-username/marp-vertical-viewer.svg)](https://github.com/your-username/marp-vertical-viewer/issues)
+[![Alpine.js](https://img.shields.io/badge/Alpine.js-3.13-blue.svg)](https://alpinejs.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.3-38B2AC.svg)](https://tailwindcss.com/)
+[![Vite](https://img.shields.io/badge/Vite-5.0-646CFF.svg)](https://vitejs.dev/)
 
-> 🚀 GitHub 마크다운을 아름다운 세로 스크롤 프레젠테이션으로 변환하는 웹 애플리케이션
+GitHub 마크다운을 아름다운 세로 스크롤 프레젠테이션으로 변환하는 **모던 웹 애플리케이션**입니다.
 
-### 🎯 [공식 데모 체험하기 →](http://127.0.0.1:8827/?url=https://github.com/Baryon-ai/TRAS/blob/main/slides/section2_nlp_basics.md)
-> TRAS NLP 기초 슬라이드로 **수학 수식, 코드 하이라이팅, 테이블, 테마 변경** 등 모든 기능을 한번에 체험해보세요!
+## ✨ 주요 특징
 
-## ✨ 주요 기능
+### 🎨 **Marp 테마 시스템**
+- **6가지 완전히 다른 테마**: Default, Gaia, Uncover, Academic, Business, Nature
+- 각 테마별 고유한 폰트, 색상, 레이아웃
+- 실시간 테마 전환 및 풀스크린 최적화
 
-### 📝 완벽한 마크다운 지원
-- **기본 문법**: 제목, 목록, 링크, 이미지 등
-- **수학 수식**: LaTeX 문법 지원 ($...$, $$...$$)
-- **코드 블록**: 문법 강조 지원 (JavaScript, Python, Java 등)
-- **테이블**: 깔끔한 표 형식
-- **MARP 호환**: 기존 MARP 슬라이드 완벽 지원
+### 🧮 **고급 마크다운 지원**
+- **수학 수식**: KaTeX를 활용한 LaTeX 문법 ($...$, $$...$$)
+- **코드 강조**: Prism.js 기반 다양한 언어 지원
+- **테이블 렌더링**: GitHub Flavored Markdown 완벽 지원
+- **연속 슬라이드**: H1 없이 H2만 있어도 자연스러운 구조
 
-### 🎨 다양한 테마 & 레이아웃
-- **4가지 테마**: 기본, 다크, 라이트, 자연
-- **유연한 레이아웃**: 목차 위치 변경 (왼쪽/오른쪽)
-- **반응형 디자인**: 모바일, 태블릿, 데스크톱 최적화
+### 🚀 **모던 기술 스택**
+- **Alpine.js**: 반응형 상태 관리
+- **Tailwind CSS**: 유틸리티 기반 스타일링
+- **Vite**: 초고속 개발 서버 및 빌드
+- **npm 패키지 관리**: 모던 의존성 관리
 
-### 🔗 GitHub 연동
-- **URL 자동 변환**: GitHub blob URL → raw URL 자동 변환
-- **원클릭 로드**: GitHub 저장소에서 직접 마크다운 로드
-- **URL 파라미터**: 링크만으로 바로 프레젠테이션 시작
-- **공유 기능**: 생성된 프레젠테이션을 URL로 공유
+### 📱 **사용자 경험**
+- 완전 반응형 디자인
+- 키보드 네비게이션 (화살표 키, ESC)
+- GitHub URL 직접 로드
+- 풀스크린 프레젠테이션 모드
+- 목차 위치 자유 변경 (좌/우)
 
-### 🖥️ 프레젠테이션 모드
-- **풀스크린**: 헤더 숨김으로 완전한 프레젠테이션 모드
-- **키보드 단축키**: 방향키로 슬라이드 이동, ESC로 종료
-- **세로 스크롤**: 긴 내용도 자유롭게 스크롤
+## 🛠️ 설치 및 실행
 
-## 🚀 빠른 시작
+### 요구사항
+- Node.js 18+ 
+- npm 또는 yarn
 
-### 🎯 공식 데모 체험
-```
-http://127.0.0.1:8827/?url=https://github.com/Baryon-ai/TRAS/blob/main/slides/section2_nlp_basics.md
-```
-> TRAS NLP 기초 슬라이드로 모든 기능을 한번에 체험해보세요!
+### 개발 환경 설정
 
-### 1. 바로 사용하기
-```
-https://your-domain.com/index.html?url=https://github.com/user/repo/blob/main/presentation.md
-```
-
-### 2. 로컬에서 실행
 ```bash
 # 저장소 클론
 git clone https://github.com/your-username/marp-vertical-viewer.git
-
-# 디렉토리 이동
 cd marp-vertical-viewer
 
-# 웹 서버 실행 (Python 예시)
-python -m http.server 8000
+# 패키지 설치
+npm install
 
-# 브라우저에서 열기
-open http://localhost:8000
+# 개발 서버 시작
+npm run dev
+
+# 브라우저에서 http://localhost:3000 접속
 ```
 
-### 3. GitHub Pages로 배포
-1. 이 저장소를 Fork
-2. Settings → Pages에서 GitHub Pages 활성화
-3. `https://your-username.github.io/marp-vertical-viewer/` 로 접근
+### 프로덕션 빌드
 
-## 📖 사용법
+```bash
+# 프로덕션 빌드
+npm run build
+
+# 빌드 결과 미리보기
+npm run preview
+```
+
+## 🏗️ 프로젝트 구조
+
+```
+marp_vertical_viewer/
+├── package.json              # 프로젝트 설정 및 의존성
+├── vite.config.js            # Vite 빌드 설정
+├── tailwind.config.js        # Tailwind CSS 설정
+├── postcss.config.js         # PostCSS 설정
+├── index.html                # 메인 HTML (Alpine.js 기반)
+├── src/
+│   ├── styles/
+│   │   ├── main.css          # 메인 스타일 (Tailwind + 커스텀)
+│   │   └── themes.css        # Marp 테마 시스템
+│   ├── scripts/
+│   │   ├── main.js           # Alpine.js 메인 스토어
+│   │   ├── slideManager.js   # 슬라이드 관리 로직
+│   │   ├── themeManager.js   # 테마 관리 로직
+│   │   └── githubLoader.js   # GitHub 연동 로직
+│   └── utils/
+│       └── markdown.js       # 마크다운 렌더링 유틸리티
+└── dist/                     # 빌드 결과물
+```
+
+## 🎮 사용법
 
 ### 기본 사용법
-1. **직접 입력**: 마크다운을 입력하고 "프레젠테이션 생성"
-2. **GitHub 로드**: "📁 GitHub 로드" → URL 입력 → 자동 로드
-3. **URL 파라미터**: `?url=GitHub주소`로 직접 접근
+1. **마크다운 입력**: 상단 텍스트 영역에 마크다운 작성
+2. **슬라이드 구분**: `---`로 슬라이드 분리
+3. **프레젠테이션 생성**: "🚀 생성" 버튼 클릭
 
-### URL 파라미터 예시
+### 고급 기능
+
+#### 📁 GitHub 연동
 ```
-# 🎯 공식 데모 (TRAS NLP 기초)
-?url=https://github.com/Baryon-ai/TRAS/blob/main/slides/section2_nlp_basics.md
+# URL 파라미터로 직접 접근
+https://your-domain.com/?url=https://github.com/user/repo/blob/main/slides.md
 
-# 기본 파라미터
-?url=https://github.com/user/repo/blob/main/slides.md
-
-# 다른 파라미터명도 지원
-?github=https://github.com/user/repo/blob/main/slides.md
-?md=https://github.com/user/repo/blob/main/slides.md
+# 또는 "📁 GitHub" 버튼 사용
 ```
 
-### 마크다운 문법 예시
-```markdown
-# 첫 번째 슬라이드
-## 부제목
+#### 🎨 테마 선택
+- 드롭다운에서 6가지 테마 중 선택
+- 각 테마별 특화된 디자인과 폰트
+- 풀스크린 모드에서 최적화된 경험
 
-일반 텍스트와 **강조**, *기울임* 텍스트
+#### ⌨️ 키보드 단축키
+- `←/→` 또는 `↑/↓`: 슬라이드 네비게이션
+- `ESC`: 풀스크린 모드 해제
 
-### 수학 수식
-인라인: $E = mc^2$
+## 🎯 공식 데모
 
-블록:
-$$\int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}$$
+**TRAS NLP 기초 슬라이드**로 모든 기능을 체험해보세요:
 
-### 코드 블록
-```javascript
-function hello() {
-    console.log("Hello, World!");
-}
+```
+https://your-domain.com/?url=https://github.com/Baryon-ai/TRAS/blob/main/slides/section2_nlp_basics.md
 ```
 
-### 테이블
-| 이름 | 나이 | 직업 |
-|------|------|------|
-| 김철수 | 30 | 개발자 |
-| 이영희 | 25 | 디자이너 |
+## 🎨 테마 가이드
 
----
+### 📋 **Default Theme**
+- **용도**: 일반적인 모든 프레젠테이션
+- **특징**: 깔끔하고 모던한 Tailwind 기반 디자인
+- **폰트**: Inter
 
-# 두 번째 슬라이드
-다음 슬라이드 내용...
-```
+### 🌙 **Gaia Theme**
+- **용도**: 몰입형 프레젠테이션, 컨퍼런스 발표
+- **특징**: 어두운 배경, 백드롭 블러 효과
+- **폰트**: Inter
 
-## 🎯 활용 사례
+### 📰 **Uncover Theme**
+- **용도**: 텍스트 중심 콘텐츠, 블로그 포스트
+- **특징**: 미니멀한 신문/잡지 스타일
+- **폰트**: Georgia (serif)
 
-### 교육 및 강의
-- 온라인 강의 자료
-- 학회 발표
-- 워크샵 및 세미나
+### 🎓 **Academic Theme**
+- **용도**: 학술 발표, 연구 보고서
+- **특징**: 정형화된 학술 논문 스타일
+- **폰트**: Times New Roman
 
-### 개발 문서화
-- API 문서 프레젠테이션
-- 기술 스펙 발표
-- 프로젝트 소개
+### 💼 **Business Theme**
+- **용도**: 기업 프레젠테이션, 투자 피칭
+- **특징**: 전문적인 그라디언트 효과
+- **폰트**: Inter
 
-### 팀 미팅
-- 상태 보고서
-- 계획 발표
-- 결과 공유
+### 🌿 **Nature Theme**
+- **용도**: 환경 프레젠테이션, 교육 자료
+- **특징**: 자연스러운 색상 팔레트
+- **폰트**: Inter
 
-## 🛠️ 기술 스택
+## 🔧 기술 세부사항
 
-- **Frontend**: HTML5, CSS3, JavaScript (Vanilla)
-- **수학 렌더링**: [KaTeX](https://katex.org/)
-- **코드 하이라이팅**: [Highlight.js](https://highlightjs.org/)
-- **디자인**: 순수 CSS (프레임워크 없음)
+### Alpine.js 아키텍처
+- **Global Store 패턴**: 중앙집중식 상태 관리
+- **모듈화**: 기능별 매니저 클래스 분리
+- **반응형 UI**: x-model, x-show, x-transition 활용
 
-## 📦 의존성
+### 스타일링 시스템
+- **Tailwind CSS**: 유틸리티 우선 접근법
+- **PostCSS**: 자동 접두사 및 최적화
+- **테마 시스템**: CSS 클래스 기반 테마 전환
 
-### CDN 라이브러리
-- KaTeX v0.16.8 (수학 수식 렌더링)
-- Highlight.js v11.9.0 (코드 문법 강조)
-
-### 브라우저 지원
-- Chrome 80+
-- Firefox 75+
-- Safari 13+
-- Edge 80+
+### 빌드 시스템
+- **Vite**: ES 모듈 기반 개발 서버
+- **Hot Module Replacement**: 실시간 개발 경험
+- **트리 쉐이킹**: 최적화된 프로덕션 번들
 
 ## 🤝 기여하기
 
-### 버그 리포트
-[Issues](https://github.com/your-username/marp-vertical-viewer/issues)에서 버그를 신고해주세요.
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-### 기능 제안
-새로운 기능 아이디어가 있으시면 [Discussions](https://github.com/your-username/marp-vertical-viewer/discussions)에서 논의해주세요.
+## 📄 라이선스
 
-### Pull Request
-1. 저장소를 Fork
-2. 기능 브랜치 생성 (`git checkout -b feature/amazing-feature`)
-3. 변경사항 커밋 (`git commit -m 'Add amazing feature'`)
-4. 브랜치에 푸시 (`git push origin feature/amazing-feature`)
-5. Pull Request 생성
+MIT License에 따라 배포됩니다. 자세한 내용은 `LICENSE` 파일을 참조하세요.
 
-### 개발 가이드라인
-- 코드 스타일: JavaScript Standard Style
-- 커밋 메시지: [Conventional Commits](https://www.conventionalcommits.org/)
-- 테스트: 주요 브라우저에서 동작 확인
+## 🔗 관련 링크
 
-## 📝 라이선스
-
-이 프로젝트는 [MIT 라이선스](LICENSE) 하에 배포됩니다.
-
-```
-MIT License
-
-Copyright (c) 2025 BaryonLabs
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
-
-## 🙏 감사의 말
-
-이 프로젝트는 다음 오픈소스 프로젝트들의 영감을 받았습니다:
-- [Marp](https://marp.app/) - 마크다운 프레젠테이션 도구
-- [reveal.js](https://revealjs.com/) - HTML 프레젠테이션 프레임워크
-- [Slidev](https://sli.dev/) - 개발자를 위한 프레젠테이션 슬라이드
-
-## 📞 연락처
-
-- 프로젝트 링크: [https://github.com/your-username/marp-vertical-viewer](https://github.com/your-username/marp-vertical-viewer)
-- 데모 사이트: [https://your-username.github.io/marp-vertical-viewer/](https://your-username.github.io/marp-vertical-viewer/)
+- **공식 웹사이트**: [your-domain.com](https://your-domain.com)
+- **데모 슬라이드**: [TRAS NLP 기초](https://github.com/Baryon-ai/TRAS/blob/main/slides/section2_nlp_basics.md)
+- **이슈 리포트**: [GitHub Issues](https://github.com/your-username/marp-vertical-viewer/issues)
 
 ---
 
-⭐ 이 프로젝트가 유용하다면 Star를 눌러주세요! 
+**⭐ 이 프로젝트가 유용하다면 별표를 눌러주세요!** 
